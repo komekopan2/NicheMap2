@@ -12,7 +12,6 @@ services:
     build:
       context: .
       dockerfile: containers/django/Dockerfile
-    #command: python manage.py runserver 0.0.0.0:8000
     # ボリュームを指定
     # ローカルのカレントディレクトリをコンテナの/codeにマウントする
     # ローカルの/staticをコンテナの/staticにマウントする
