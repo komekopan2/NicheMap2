@@ -1,0 +1,49 @@
+services:
+  db:
+    image: postgres
+    # M1チップでも動くように
+    # Intel Macの場合あってもなくても動く
+    platform: linux/x86_64
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    env_file:
+        - .env.prod
+  app:
+    build:
+      context: .
+      dockerfile: containers/django/Dockerfile
+    # ボリュームを指定
+    # ローカルのカレントディレクトリをコンテナの/codeにマウントする
+    # ローカルの/staticをコンテナの/staticにマウントする
+    volumes:
+      - .:/code
+      - ./static:/static
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env.prod
+    depends_on:
+      - db
+    # シェルスクリプトを実行
+    command: sh -c "/code/entrypoint.sh"
+  web:
+    # コンテナ名をwebに指定
+    container_name: web
+    # NginxのDockerfileをビルドする
+    build:
+      # ビルドコンテキストはカレントディレクトリ
+      context: .
+      dockerfile: containers/nginx/Dockerfile
+    # ボリュームを指定
+    # ローカルの/staticをコンテナの/staticにマウントする
+    volumes:
+      - ./static:/static
+    # ローカルの80番ボートをコンテナの80番ポートとつなぐ
+    ports:
+      - "80:80"
+    # 先にappを起動してからwebを起動する
+    depends_on:
+      - app
+volumes:
+  db_data:
+  static:

@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # Pythonのイメージを指定
-FROM python:3
+FROM python:3.9
 # PYTHONDONTWRITEBYTECODEとPYTHONUNBUFFEREDはオプション
 # pycファイル(および__pycache__)の生成を行わないようにする
 ENV PYTHONDONTWRITEBYTECODE=1
