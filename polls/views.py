@@ -15,6 +15,7 @@ def index(request):
     }
     return HttpResponse(template.render(context, request))
 
+
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     template = loader.get_template('polls/detail.html')
@@ -23,9 +24,17 @@ def detail(request, question_id):
     }
     return HttpResponse(template.render(context, request))
 
+
 def results(request, question_id):
     response = "You're looking at the results of question %s."
     return HttpResponse(response % question_id)
 
+
 def vote(request, question_id):
     return HttpResponse("You're voting on question %s." % question_id)
+
+
+def map(request):
+    template = loader.get_template('polls/map.html')
+    return HttpResponse(template.render({}, request))
+
