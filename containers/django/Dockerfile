@@ -16,5 +16,11 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 # ソースコードをコンテナにコピー
 COPY ../.. /code/
+# ヒストリを保存するディレクトリを作成
+RUN mkdir /root/myhistory
+# ヒストリファイルを作成
+RUN touch /root/myhistory/.history
+# ヒストリファイルのパーミッションを変更
+RUN chmod 600 /root/myhistory/.history
 # entrypoint.shに実行権限を付与
 RUN chmod 755 entrypoint.sh

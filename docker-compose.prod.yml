@@ -17,9 +17,11 @@ services:
     # ボリュームを指定
     # ローカルのカレントディレクトリをコンテナの/codeにマウントする
     # ローカルの/staticをコンテナの/staticにマウントする
+    # ローカルのapp-bashhistoryをコンテナの/root/myhistoryにマウントする
     volumes:
       - .:/code
       - ./static:/static
+      - app-bashhistory:/root/myhistory
     ports:
       - "8000:8000"
     env_file:
@@ -49,3 +51,4 @@ services:
 volumes:
   db_data:
   static:
+  app-bashhistory:
