@@ -20,7 +20,7 @@ services:
     # ローカルのapp-bashhistoryをコンテナの/root/myhistoryにマウントする
     volumes:
       - .:/code
-      - ./static:/static
+      - ./polls/static/static
       - app-bashhistory:/root/myhistory
     ports:
       - "8000:8000"
