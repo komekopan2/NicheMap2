@@ -30,7 +30,17 @@ services:
     depends_on:
       - db
     # シェルスクリプトを実行
-    command: sh -c "/code/entrypoint.sh"
+    command: >
+      sh -c "
+      python manage.py makemigrations --noinput &&
+      python manage.py migrate --noinput &&
+      python manage.py collectstatic --noinput &&
+      if [ \$DEBUG = 'True' ]; then
+        python manage.py runserver 0.0.0.0:8000;
+      else
+        gunicorn NicheMap2.wsgi:application --bind 0.0.0.0:8000;
+      fi
+      "
   web:
     # コンテナ名をwebに指定
     container_name: web
