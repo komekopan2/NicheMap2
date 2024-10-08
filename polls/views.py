@@ -46,3 +46,10 @@ def marker_clustering(request):
         'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
     }
     return HttpResponse(template.render(context, request))
+
+def route_service(request):
+    template = loader.get_template('polls/route_service.html')
+    context = {
+        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
+    }
+    return HttpResponse(template.render(context, request))
