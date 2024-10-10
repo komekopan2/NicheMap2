@@ -22,5 +22,3 @@ RUN mkdir /root/myhistory
 RUN touch /root/myhistory/.history
 # ヒストリファイルのパーミッションを変更
 RUN chmod 600 /root/myhistory/.history
-# entrypoint.shに実行権限を付与
-RUN chmod 755 entrypoint.sh
