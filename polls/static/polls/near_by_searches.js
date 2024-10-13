@@ -9,7 +9,7 @@ function initMap() {
     var nearbySearchRequest = {
         location: pyrmont,
         radius: '500',
-        type: ['restaurant','cafe'],
+        type: ['restaurant', 'cafe'],
         rankBy: google.maps.places.RankBy.PROMINENCE
     };
 
@@ -23,7 +23,7 @@ function initMap() {
         for (var i = 0; i < results.length; i++) {
             var getDetailsRequest = {
                 placeId: results[i].place_id,
-                fields: ["name", "photo","business_status","formatted_address", "geometry", "rating", "user_ratings_total", "url"],
+                fields: ["name", "photo", "business_status", "formatted_address", "geometry", "rating", "user_ratings_total", "url"],
             };
             // Place detail Windowを複数にするため、ここで宣言
             // const infowindow = new google.maps.InfoWindow();
