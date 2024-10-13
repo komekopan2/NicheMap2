@@ -28,11 +28,13 @@ function initMap() {
             // Place detail Windowを複数にするため、ここで宣言
             // const infowindow = new google.maps.InfoWindow();
 
+            // レビュー数が100未満の場合のみマーカーを表示
             service.getDetails(getDetailsRequest, (place) => {
                 if (
                     place &&
                     place.geometry &&
-                    place.geometry.location
+                    place.geometry.location,
+                    place.user_ratings_total < 100
                 ) {
                     const marker = new google.maps.Marker({
                         map,
