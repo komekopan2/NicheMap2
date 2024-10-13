@@ -9,7 +9,7 @@ function initMap() {
     var nearbySearchRequest = {
         location: pyrmont,
         radius: '500',
-        type: ['レストラン', 'カフェ'],
+        type: ['restaurant','cafe'],
         rankBy: google.maps.places.RankBy.PROMINENCE
     };
 
@@ -41,58 +41,60 @@ function initMap() {
                     });
 
                     google.maps.event.addListener(marker, "click", () => {
-                        const content = document.createElement("div");
-
-                        const imageElement = document.createElement("img");
-                        imageElement.src = place.photos[0].getUrl({maxWidth: 200, maxHeight: 200});
-                        content.appendChild(imageElement);
-
-                        const nameElement = document.createElement("h2");
-                        nameElement.textContent = place.name;
-                        content.appendChild(nameElement);
-
-                        // business_statusがOPERAIONALの場合は「営業中」、CLOSED_TEMPORARILYの場合は「一時休業中」、CLOSED_PERMANENTLYの場合は「閉店済み」と表示
-                        const placeBusinessStatusElement = document.createElement("p");
-                        if (place.business_status === "OPERATIONAL") {
-                            placeBusinessStatusElement.textContent = "営業中";
-                        }
-                        if (place.business_status === "CLOSED_TEMPORARILY") {
-                            placeBusinessStatusElement.textContent = "一時休業中";
-                        }
-                        if (place.business_status === "CLOSED_PERMANENTLY") {
-                            placeBusinessStatusElement.textContent = "閉店済み";
-                        }
-                        content.appendChild(placeBusinessStatusElement);
-
-                        // 住所を表示
-                        const placeAddressElement = document.createElement("p");
-                        placeAddressElement.textContent = place.formatted_address;
-                        content.appendChild(placeAddressElement);
-
-                        // 評価を表示
-                        const placeRatingElement = document.createElement("p");
-                        placeRatingElement.textContent = place.rating;
-                        content.appendChild(placeRatingElement);
-
-                        // レビュー数を表示
-                        const placeRatingsTotalElement = document.createElement("p");
-                        placeRatingsTotalElement.textContent = place.user_ratings_total;
-                        content.appendChild(placeRatingsTotalElement);
-
-                        // 「Google Mapsで見る」リンクを挿入し、新しいタブで開くようにする
-                        const placeUrlElement = document.createElement("a");
-                        placeUrlElement.href = place.url;
-                        placeUrlElement.target = "_blank";
-                        placeUrlElement.textContent = "Google Mapsで見る";
-                        content.appendChild(placeUrlElement);
-
-                        infowindow.setContent(content);
-                        infowindow.open(map, marker);
+                        showPlaceDetails(place, infowindow, map, marker);
                     });
                 }
             });
         }
     });
+}
+
+function showPlaceDetails(place, infowindow, map, marker) {
+    const content = document.createElement("div");
+
+    const imageElement = document.createElement("img");
+    imageElement.src = place.photos[0].getUrl({maxWidth: 200, maxHeight: 200});
+    content.appendChild(imageElement);
+
+    const nameElement = document.createElement("h2");
+    nameElement.textContent = place.name;
+    content.appendChild(nameElement);
+
+    // business_statusがOPERATIONALの場合は「営業中」、CLOSED_TEMPORARILYの場合は「一時休業中」、CLOSED_PERMANENTLYの場合は「閉店済み」と表示
+    const placeBusinessStatusElement = document.createElement("p");
+    if (place.business_status === "OPERATIONAL") {
+        placeBusinessStatusElement.textContent = "営業中";
+    } else if (place.business_status === "CLOSED_TEMPORARILY") {
+        placeBusinessStatusElement.textContent = "一時休業中";
+    } else if (place.business_status === "CLOSED_PERMANENTLY") {
+        placeBusinessStatusElement.textContent = "閉店済み";
+    }
+    content.appendChild(placeBusinessStatusElement);
+
+    // 住所を表示
+    const placeAddressElement = document.createElement("p");
+    placeAddressElement.textContent = place.formatted_address;
+    content.appendChild(placeAddressElement);
+
+    // 評価を表示
+    const placeRatingElement = document.createElement("p");
+    placeRatingElement.textContent = `評価: ${place.rating}`;
+    content.appendChild(placeRatingElement);
+
+    // レビュー数を表示
+    const placeRatingsTotalElement = document.createElement("p");
+    placeRatingsTotalElement.textContent = `レビュー数: ${place.user_ratings_total}`;
+    content.appendChild(placeRatingsTotalElement);
+
+    // 「Google Mapsで見る」リンクを挿入し、新しいタブで開くようにする
+    const placeUrlElement = document.createElement("a");
+    placeUrlElement.href = place.url;
+    placeUrlElement.target = "_blank";
+    placeUrlElement.textContent = "Google Mapsで見る";
+    content.appendChild(placeUrlElement);
+
+    infowindow.setContent(content);
+    infowindow.open(map, marker);
 }
 
 window.initMap = initMap;
