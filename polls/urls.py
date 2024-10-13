@@ -9,7 +9,6 @@ urlpatterns = [
     path('<int:question_id>/results/', views.results, name='results'),
     path('<int:question_id>/vote/', views.vote, name='vote'),
     path('map/', views.map, name='map'),
-    path('marker_clustering/', views.marker_clustering, name='marker_clustering'),
     path('route_service/', views.route_service, name='route_service'),
     path('near_by_searches/', views.near_by_searches, name='near_by_searches'),
 ]
