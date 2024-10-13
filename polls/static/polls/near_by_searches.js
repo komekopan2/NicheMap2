@@ -59,22 +59,41 @@ function callback(results, status) {
         }
     }
 }
-
 ///////////////////////////////////////////////////////////
 // 下記はplace_searchライブラリで共通なので変えない
 ///////////////////////////////////////////////////////////
 function createMarker(place) {
-    if (!place.geometry || !place.geometry.location) return;
+    if (
+        place &&
+        place.geometry &&
+        place.geometry.location
+    ) {
+        const marker = new google.maps.Marker({
+            map,
+            position: place.geometry.location,
+        });
 
-    const marker = new google.maps.Marker({
-        map,
-        position: place.geometry.location,
-    });
+        google.maps.event.addListener(marker, "click", () => {
+            const content = document.createElement("div");
+            const nameElement = document.createElement("h2");
 
-    google.maps.event.addListener(marker, "click", () => {
-        infowindow.setContent(place.name || "");
-        infowindow.open(map);
-    });
+            nameElement.textContent = place.name;
+            content.appendChild(nameElement);
+
+            const placeIdElement = document.createElement("p");
+
+            placeIdElement.textContent = place.place_id;
+            content.appendChild(placeIdElement);
+
+            const placeAddressElement = document.createElement("p");
+
+            placeAddressElement.textContent = place.formatted_address;
+            content.appendChild(placeAddressElement);
+            const infowindow = new google.maps.InfoWindow();
+            infowindow.setContent(content);
+            infowindow.open(map, marker);
+        });
+    }
 }
 
 window.initMap = initMap;
