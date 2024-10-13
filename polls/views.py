@@ -40,13 +40,6 @@ def map(request):
     }
     return HttpResponse(template.render(context, request))
 
-def route_service(request):
-    template = loader.get_template('polls/route_service.html')
-    context = {
-        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
-    }
-    return HttpResponse(template.render(context, request))
-
 def near_by_searches(request):
     template = loader.get_template('polls/near_by_searches.html')
     context = {
