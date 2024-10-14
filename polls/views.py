@@ -34,7 +34,14 @@ def vote(request, question_id):
 
 
 def map(request):
-    template = loader.get_template('polls/map.html')
+    template = loader.get_template('polls/map_index.html')
+    context = {
+        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
+    }
+    return HttpResponse(template.render(context, request))
+
+def near_by_searches(request):
+    template = loader.get_template('polls/near_by_searches.html')
     context = {
         'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
     }
