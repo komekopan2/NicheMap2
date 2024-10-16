@@ -4,6 +4,7 @@ from .models import Question
 from django.template import loader
 from django.shortcuts import get_object_or_404
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
@@ -40,6 +41,7 @@ def map(request):
     }
     return HttpResponse(template.render(context, request))
 
+@login_required
 def near_by_searches(request):
     template = loader.get_template('polls/near_by_searches.html')
     context = {

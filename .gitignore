@@ -1,3 +1,5 @@
 .env
 .env.prod
 .DS_Store
+fullchain.pem
+privkey.pem
