@@ -5,6 +5,8 @@ from django.template import loader
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from .method.geolocation_api import geolocation_api
+from .method.nearby_search_api import nearby_search_api
 
 
 def index(request):
@@ -41,6 +43,7 @@ def map(request):
     }
     return HttpResponse(template.render(context, request))
 
+
 @login_required
 def near_by_searches(request):
     template = loader.get_template('polls/near_by_searches.html')
@@ -48,3 +51,19 @@ def near_by_searches(request):
         'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
     }
     return HttpResponse(template.render(context, request))
+
+
+def searches(request):
+    geolocation = {'lat': 35.1469568, 'lng': 136.9669632}
+    nearby_search = nearby_search_api(geolocation)
+    template = loader.get_template('polls/searches.html')
+    context = {
+        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
+        'geolocation': geolocation,
+        'restaurants': nearby_search['places'],
+        'lat': nearby_search['places'][0]['location']['latitude'],
+        'lng': nearby_search['places'][0]['location']['longitude'],
+        'photo': nearby_search['places'][0]['photos'][0]['authorAttributions'][0]['photoUri'],
+    }
+    return HttpResponse(template.render(context, request))
+
