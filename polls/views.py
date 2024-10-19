@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from .method.geolocation_api import geolocation_api
 from .method.nearby_search_api import nearby_search_api
+from .method.saving_restaurants_photos import saving_restaurants_photos
 
 
 def index(request):
@@ -56,14 +57,13 @@ def near_by_searches(request):
 def searches(request):
     geolocation = {'lat': 35.1469568, 'lng': 136.9669632}
     nearby_search = nearby_search_api(geolocation)
+    restaurants =nearby_search['places']
+    saved_restaurants = saving_restaurants_photos(restaurants)
     template = loader.get_template('polls/searches.html')
     context = {
         'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
         'server_maps_api_key': settings.SERVER_MAPS_API_KEY,
         'geolocation': geolocation,
-        'restaurants': nearby_search['places'],
-        'lat': nearby_search['places'][0]['location']['latitude'],
-        'lng': nearby_search['places'][0]['location']['longitude'],
-        'photo': nearby_search['places'][0]['photos'][0]['authorAttributions'][0]['photoUri'],
+        'saved_restaurants': saved_restaurants,
     }
     return HttpResponse(template.render(context, request))
