@@ -4,7 +4,7 @@
 
 ### ローカル環境起動
 ```
-docker compose -f docker-compose.prod.yml up --build -d
+docker compose -f docker-compose.prod.yml up --build -d --remove-orphans
 ```
 - -f オプションをつけると指定したファイルを使ってコンテナを起動します。
 - --build オプションをつけるとイメージを再ビルドします。
