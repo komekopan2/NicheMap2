@@ -39,7 +39,7 @@ def vote(request, question_id):
 def map(request):
     template = loader.get_template('polls/map_index.html')
     context = {
-        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
+        'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
     }
     return HttpResponse(template.render(context, request))
 
@@ -48,7 +48,7 @@ def map(request):
 def near_by_searches(request):
     template = loader.get_template('polls/near_by_searches.html')
     context = {
-        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
+        'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
     }
     return HttpResponse(template.render(context, request))
 
@@ -58,7 +58,8 @@ def searches(request):
     nearby_search = nearby_search_api(geolocation)
     template = loader.get_template('polls/searches.html')
     context = {
-        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
+        'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
+        'server_maps_api_key': settings.SERVER_MAPS_API_KEY,
         'geolocation': geolocation,
         'restaurants': nearby_search['places'],
         'lat': nearby_search['places'][0]['location']['latitude'],
@@ -66,4 +67,3 @@ def searches(request):
         'photo': nearby_search['places'][0]['photos'][0]['authorAttributions'][0]['photoUri'],
     }
     return HttpResponse(template.render(context, request))
-
