@@ -124,7 +124,9 @@ USE_I18N = True
 
 USE_TZ = True
 
-GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
+FRONT_MAPS_API_KEY = os.getenv('FRONT_MAPS_API_KEY')
+SERVER_MAPS_API_KEY = os.getenv('SERVER_MAPS_API_KEY')
+
 
 
 # Static files (CSS, JavaScript, Images)

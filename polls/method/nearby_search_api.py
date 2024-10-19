@@ -1,4 +1,5 @@
 import requests
+from django.conf import settings
 
 
 # from django.conf import settings
@@ -6,7 +7,7 @@ import requests
 def nearby_search_api(geolocation):
     url = 'https://places.googleapis.com/v1/places:searchNearby'
     headers = {'Content-Type': 'application/json',
-               'X-Goog-Api-Key': "AIzaSyAW7y-VPNH-eBaGjjALQlyE_IWLK1_KrJ0",
+               'X-Goog-Api-Key': settings.SERVER_MAPS_API_KEY,
                'X-Goog-FieldMask': 'places.displayName,places.websiteUri,places.googleMapsUri,places.id,places.location,places.photos,places.primaryTypeDisplayName,places.id'
     }
     data = {'includedPrimaryTypes': ['restaurant'],

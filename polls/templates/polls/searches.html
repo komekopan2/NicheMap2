@@ -19,7 +19,7 @@
                 // A marker with a with a URL pointing to a PNG.
                 beachFlagImg = document.createElement("img");
                 beachFlagImg.src =
-                    "{{ restaurant.photos.0.authorAttributions.0.photoUri }}";
+                    "https://places.googleapis.com/v1/{{ restaurant.photos.0.name }}/media?key={{ server_maps_api_key }}&maxHeightPx=100&maxWidthPx=100";
                 restaurants.push({
                     position: {
                         lat: {{ restaurant.location.latitude }},
@@ -68,7 +68,7 @@
   for more information.
   -->
 <script
-        src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap&libraries=marker,places&v=beta"
+        src="https://maps.googleapis.com/maps/api/js?key={{ front_maps_api_key }}&callback=initMap&libraries=marker,places&v=beta"
         defer
 ></script>
 </body>
