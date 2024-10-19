@@ -129,6 +129,9 @@ GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+# ローカルの./staticをコンテナの/staticにマウントしている
+# collectstaticコマンドを実行すると、コンテナの/code/polls/staticのファイルが/staticにコピーされる
+# ブラウザから閲覧されるときは、コンテナの/staticを参照する
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/static/'

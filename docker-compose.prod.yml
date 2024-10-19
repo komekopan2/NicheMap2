@@ -20,7 +20,7 @@ services:
     # ローカルのapp-bashhistoryをコンテナの/root/myhistoryにマウントする
     volumes:
       - .:/code
-      - ./polls/static:/static
+      - ./static:/static
       - app-bashhistory:/root/myhistory
     # 8000番ポートをNginx側が接続できるよう開く
     expose:
@@ -52,7 +52,7 @@ services:
     # ボリュームを指定
     # ローカルの/staticをコンテナの/staticにマウントする
     volumes:
-      - ./polls/static:/static
+      - ./static:/static
     # ローカルの80番ボートをコンテナの80番ポートとつなぐ
     ports:
       - "80:80"
@@ -62,5 +62,4 @@ services:
       - app
 volumes:
   db_data:
-  static:
   app-bashhistory:
