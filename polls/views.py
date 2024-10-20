@@ -54,14 +54,22 @@ def near_by_searches(request):
 
 
 def searches(request):
-    geolocation = {'lat': 35.1469568, 'lng': 136.9669632}
-    nearby_search = nearby_search_api(geolocation)
-    restaurants =nearby_search['places']
-    saved_restaurants = saving_restaurants_photos(restaurants)
     template = loader.get_template('polls/searches.html')
     context = {
         'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
-        'server_maps_api_key': settings.SERVER_MAPS_API_KEY,
+    }
+    return HttpResponse(template.render(context, request))
+
+def searches_with_geolocation(request, query_geolocation):
+    # 文字列をカンマで分割してfloatに変換
+    geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1])}
+    # nearby_search = nearby_search_api(geolocation)
+    restaurants = nearby_search_api(geolocation)['places']
+    saved_restaurants = saving_restaurants_photos(restaurants)
+    print(saved_restaurants)
+    template = loader.get_template('polls/searches_with_geolocation.html')
+    context = {
+        'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
         'geolocation': geolocation,
         'saved_restaurants': saved_restaurants,
     }

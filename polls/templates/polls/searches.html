@@ -5,56 +5,7 @@
     <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=default"></script>
 
     <link rel="stylesheet" type="text/css" href="{% static 'polls/searches.css' %}"/>
-    <script>
-        function initMap() {
-            const map = new google.maps.Map(document.getElementById("map"), {
-                center: {lat: {{ geolocation.lat }}, lng: {{ geolocation.lng }}},
-                zoom: 14,
-                mapId: "4d7250671e5b361d",
-            });
-            let restaurants = [];
-            let beachFlagImg;
-            {#restaurantsリストの個数だけループ#}
-            {% for saved_restaurant in saved_restaurants %}
-                // A marker with a with a URL pointing to a PNG.
-                beachFlagImg = document.createElement("img");
-                beachFlagImg.src ="{% static 'media/' %}{{ saved_restaurant.photos }}";
-                restaurants.push({
-                    position: {
-                        lat: {{ saved_restaurant.location.latitude }},
-                        lng: {{ saved_restaurant.location.longitude }}
-                    },
-                    title: "{{ saved_restaurant.displayName.text }}",
-                    content: beachFlagImg,
-                });
-
-            {% endfor %}
-
-            // Create an info window to share between markers.
-            const infoWindow = new google.maps.InfoWindow();
-
-            // Create the markers.
-            restaurants.forEach(({position, title, content}, i) => {
-                const marker = new google.maps.marker.AdvancedMarkerView({
-                    position,
-                    map,
-                    title: `${i + 1}. ${title}`,
-                    content
-                });
-            });
-            
-            // Add a click listener for each marker, and set up the info window.
-                marker.addListener("click", ({domEvent, latLng}) => {
-                    const {target} = domEvent;
-
-                    infoWindow.close();
-                    infoWindow.setContent(marker.title);
-                    infoWindow.open(marker.map, marker);
-                });
-        }
-
-        window.initMap = initMap;
-    </script>
+    <script type="module" src="{% static 'polls/searches.js' %}"></script>
 </head>
 <body>
 <div id="map"></div>

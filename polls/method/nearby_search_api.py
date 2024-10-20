@@ -32,10 +32,6 @@ def nearby_search_api(geolocation):
         print(response.text)
         return
 
-    # print(response.json()['places'][0]['photos'][0]['authorAttributions'][0]['photoUri'])
-
     return response.json()
 
-
-nearby_search_api({'lat': 35.1469568, 'lng': 136.9669632})
 
