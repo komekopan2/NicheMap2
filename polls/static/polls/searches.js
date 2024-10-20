@@ -24,12 +24,11 @@ let map, infoWindow;
                         locationButton.textContent = "この付近を検索";
                         locationButton.classList.add("custom-map-control-button");
                         map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
-                        locationButton.addEventListener("click", () => {
-                            // 中心座標の取得
-                            const center = map.getCenter();
-                            let geolocation = center.lat() + "," + center.lng();
-                            location.href = "/polls/searches/" + geolocation + "/";
-                        });
+
+                        // 中心座標の取得
+                        const center = map.getCenter();
+                        let geolocation = center.lat() + "," + center.lng();
+                        location.href = "/polls/searches/" + geolocation + "/";
                     },
                     () => {
                         handleLocationError(true, infoWindow, map.getCenter());
