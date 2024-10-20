@@ -52,7 +52,7 @@ def near_by_searches(request):
     }
     return HttpResponse(template.render(context, request))
 
-
+@login_required
 def searches(request):
     template = loader.get_template('polls/searches.html')
     context = {
@@ -60,6 +60,7 @@ def searches(request):
     }
     return HttpResponse(template.render(context, request))
 
+@login_required
 def searches_with_geolocation(request, query_geolocation):
     # 文字列をカンマで分割してfloatに変換
     geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1])}
