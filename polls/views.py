@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from .method.nearby_search_api import nearby_search_api
-from .method.saving_restaurants_photos import saving_restaurants_photos
+from .method.saving_restaurants import saving_restaurants
 
 
 def index(request):
@@ -66,7 +66,7 @@ def searches_with_geolocation(request, query_geolocation):
     geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1])}
     # nearby_search = nearby_search_api(geolocation)
     restaurants = nearby_search_api(geolocation)['places']
-    saved_restaurants = saving_restaurants_photos(restaurants)
+    saved_restaurants = saving_restaurants(restaurants)
     print(saved_restaurants)
     template = loader.get_template('polls/searches_with_geolocation.html')
     context = {
