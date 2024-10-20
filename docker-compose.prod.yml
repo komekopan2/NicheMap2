@@ -20,7 +20,9 @@ services:
     # ローカルのapp-bashhistoryをコンテナの/root/myhistoryにマウントする
     volumes:
       - .:/code
-      - ./static:/static
+      - admin_static:/code/polls/static/admin
+      - media_static:/code/polls/static/media
+      - polls_static:/code/polls/static/polls
       - app-bashhistory:/root/myhistory
     # 8000番ポートをNginx側が接続できるよう開く
     expose:
@@ -34,7 +36,6 @@ services:
       sh -c "
       python manage.py makemigrations --noinput &&
       python manage.py migrate --noinput &&
-      python manage.py collectstatic --noinput &&
       if [ \$DEBUG = 'True' ]; then
         python manage.py runserver 0.0.0.0:8000;
       else
@@ -50,9 +51,11 @@ services:
       context: .
       dockerfile: containers/nginx/Dockerfile
     # ボリュームを指定
-    # ローカルの/staticをコンテナの/staticにマウントする
+    # /code/polls/static以外のstaticディレクトリの配置場所もあるかもしれない
     volumes:
-      - ./static:/static
+      - admin_static:/static/admin
+      - media_static:/static/media
+      - polls_static:/static/polls
     # ローカルの80番ボートをコンテナの80番ポートとつなぐ
     ports:
       - "80:80"
@@ -63,3 +66,6 @@ services:
 volumes:
   db_data:
   app-bashhistory:
+  admin_static:
+  media_static:
+  polls_static:

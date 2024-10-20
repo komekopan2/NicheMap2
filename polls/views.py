@@ -5,7 +5,6 @@ from django.template import loader
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from .method.geolocation_api import geolocation_api
 from .method.nearby_search_api import nearby_search_api
 from .method.saving_restaurants_photos import saving_restaurants_photos
 
