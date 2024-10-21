@@ -19,10 +19,7 @@ services:
     # ローカルの/staticをコンテナの/staticにマウントする
     # ローカルのapp-bashhistoryをコンテナの/root/myhistoryにマウントする
     volumes:
-      - .:/code
-      - admin_static:/code/polls/static/admin
       - media_static:/code/polls/static/media
-      - polls_static:/code/polls/static/polls
       - app-bashhistory:/root/myhistory
     # 8000番ポートをNginx側が接続できるよう開く
     expose:
@@ -53,9 +50,7 @@ services:
     # ボリュームを指定
     # /code/polls/static以外のstaticディレクトリの配置場所もあるかもしれない
     volumes:
-      - admin_static:/static/admin
       - media_static:/static/media
-      - polls_static:/static/polls
     # ローカルの80番ボートをコンテナの80番ポートとつなぐ
     ports:
       - "80:80"
@@ -65,7 +60,5 @@ services:
       - app
 volumes:
   db_data:
-  app-bashhistory:
-  admin_static:
   media_static:
-  polls_static:
+  app-bashhistory:
