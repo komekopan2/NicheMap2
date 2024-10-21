@@ -10,10 +10,8 @@ def saving_restaurants(restaurants):
         # もし、すでに保存されている場合は、保存しない
         try:
             with open('polls/static/media/' + served_photo_name, 'rb') as f:
-                print('already saved')
                 pass
         except FileNotFoundError:
-            print('not saved yet')
             url = "https://places.googleapis.com/v1/" + restaurant_photo_name + "/media?key=" + settings.SERVER_MAPS_API_KEY + "&maxHeightPx=100&maxWidthPx=100"
             response = requests.get(url)
             if response.status_code != 200:
