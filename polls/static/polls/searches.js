@@ -21,20 +21,20 @@ function initMap() {
                 locationButton.classList.add("custom-map-control-button");
                 map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
 
-                // 中心座標の取得
-                const center = map.getCenter();
-                let geolocation = center.lat() + "," + center.lng();
                 setTimeout(() => {
+                    // 中心座標の取得
+                    const center = map.getCenter();
+                    let geolocation = center.lat() + "," + center.lng();
                     window.location.href = "/polls/searches/" + geolocation + "/";
                 }, 1000); // 1秒後にリダイレクト
             },
             () => {
-                handleLocationError(true, infoWindow, { lat: 0, lng: 0 }); // mapが存在しない場合のデフォルト位置
+                handleLocationError(true, infoWindow, {lat: 0, lng: 0}); // mapが存在しない場合のデフォルト位置
             }
         );
     } else {
         // Browser doesn't support Geolocation
-        handleLocationError(false, infoWindow, { lat: 0, lng: 0 }); // デフォルト位置
+        handleLocationError(false, infoWindow, {lat: 0, lng: 0}); // デフォルト位置
     }
 }
 
