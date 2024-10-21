@@ -1,15 +1,16 @@
 let map, infoWindow;
 
-function initMap() {
+async function initMap() {
     if (navigator.geolocation) {
-        infoWindow = new google.maps.InfoWindow();  // InfoWindowを初期化
+        const { InfoWindow, Map } = await google.maps.importLibrary("maps");
+        infoWindow = new InfoWindow();  // InfoWindowを初期化
         navigator.geolocation.getCurrentPosition(
-            (position) => {
+            async (position) => {
                 const pos = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude,
                 };
-                map = new google.maps.Map(document.getElementById("map"), {
+                map = new Map(document.getElementById("map"), {
                     center: pos,
                     zoom: 14,
                     mapId: "4d7250671e5b361d",
@@ -48,4 +49,4 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.open(map);
 }
 
-window.initMap = initMap;
+initMap();
