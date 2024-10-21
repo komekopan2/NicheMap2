@@ -19,7 +19,7 @@ def saving_restaurants(restaurants):
         saved_restaurant = {
             'location': restaurant['location'],
             'display_name': restaurant['displayName']['text'],
-            'photos': restaurant_photo_name
+            'photos': served_photo_name,
         }
         saved_restaurants.append(saved_restaurant)
     return saved_restaurants
