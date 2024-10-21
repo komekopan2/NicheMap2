@@ -28,7 +28,7 @@ let map, infoWindow;
                         // 中心座標の取得
                         const center = map.getCenter();
                         let geolocation = center.lat() + "," + center.lng();
-                        location.href = "/polls/searches/" + geolocation + "/";
+                        window.location.href = "/polls/searches/" + geolocation + "/";
                     },
                     () => {
                         handleLocationError(true, infoWindow, map.getCenter());
