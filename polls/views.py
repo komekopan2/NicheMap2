@@ -5,6 +5,8 @@ from django.template import loader
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from .method.nearby_search_api import nearby_search_api
+from .method.saving_restaurants import saving_restaurants
 
 
 def index(request):
@@ -37,14 +39,39 @@ def vote(request, question_id):
 def map(request):
     template = loader.get_template('polls/map_index.html')
     context = {
-        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
+        'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
     }
     return HttpResponse(template.render(context, request))
+
 
 @login_required
 def near_by_searches(request):
     template = loader.get_template('polls/near_by_searches.html')
     context = {
-        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
+        'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
+    }
+    return HttpResponse(template.render(context, request))
+
+@login_required
+def searches(request):
+    template = loader.get_template('polls/searches.html')
+    context = {
+        'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
+    }
+    return HttpResponse(template.render(context, request))
+
+@login_required
+def searches_with_geolocation(request, query_geolocation):
+    # 文字列をカンマで分割してfloatに変換
+    geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1])}
+    # nearby_search = nearby_search_api(geolocation)
+    restaurants = nearby_search_api(geolocation)['places']
+    saved_restaurants = saving_restaurants(restaurants)
+    print(saved_restaurants)
+    template = loader.get_template('polls/searches_with_geolocation.html')
+    context = {
+        'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
+        'geolocation': geolocation,
+        'saved_restaurants': saved_restaurants,
     }
     return HttpResponse(template.render(context, request))

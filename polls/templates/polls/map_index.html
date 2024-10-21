@@ -31,7 +31,7 @@
         }));
         d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
       })({
-        key: "{{ google_maps_api_key }}", v: "beta"
+        key: "{{ front_maps_api_key }}", v: "beta"
       });
     </script>
   </body>

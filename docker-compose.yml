@@ -20,7 +20,6 @@ services:
     # ローカルのapp-bashhistoryをコンテナの/root/myhistoryにマウントする
     volumes:
       - .:/code
-      - ./polls/static:/static
       - app-bashhistory:/root/myhistory
     ports:
       - "8000:8000"
@@ -33,7 +32,6 @@ services:
       sh -c "
       python manage.py makemigrations --noinput &&
       python manage.py migrate --noinput &&
-      python manage.py collectstatic --noinput &&
       if [ \$DEBUG = 'True' ]; then
         python manage.py runserver 0.0.0.0:8000;
       else
@@ -42,5 +40,4 @@ services:
       "
 volumes:
   db_data:
-  static:
   app-bashhistory:
