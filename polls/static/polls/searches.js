@@ -13,12 +13,7 @@ let map, infoWindow;
                             zoom: 14,
                             mapId: "4d7250671e5b361d",
                         });
-                        let centerCoords_lat;
-                        let centerCoords_lng;
 
-                        // 中心座標の取得
-                        centerCoords_lat = map.getCenter().lat;
-                        centerCoords_lng = map.getCenter().lng;
                         // polls/seaches/のオプションパラメータに中心座標を追加したボタンを表示
                         let locationButton = document.createElement("button");
                         locationButton.textContent = "この付近を検索";
