@@ -64,7 +64,6 @@ def searches(request):
 def searches_with_geolocation(request, query_geolocation):
     # 文字列をカンマで分割してfloatに変換
     geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1])}
-    # nearby_search = nearby_search_api(geolocation)
     restaurants = nearby_search_api(geolocation)['places']
     saved_restaurants = saving_restaurants(restaurants)
     print(saved_restaurants)
