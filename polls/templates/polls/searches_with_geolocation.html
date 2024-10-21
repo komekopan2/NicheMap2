@@ -21,6 +21,9 @@
                 // A marker with a with a URL pointing to a PNG.
                 beachFlagImg = document.createElement("img");
                 beachFlagImg.src = "{% static 'media/' %}{{ saved_restaurant.photos }}";
+                beachFlagImg.style.width = "100px"; // 画像のサイズ調整
+                beachFlagImg.style.height = "100px"; // 画像のサイズ調整
+                beachFlagImg.style.borderRadius = "50%"; // 丸い形にする
                 restaurants.push({
                     position: {
                         lat: {{ saved_restaurant.location.latitude }},
