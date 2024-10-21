@@ -2,6 +2,7 @@ let map, infoWindow;
 
 function initMap() {
     if (navigator.geolocation) {
+        infoWindow = new google.maps.InfoWindow();  // InfoWindowを初期化
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const pos = {
@@ -28,12 +29,12 @@ function initMap() {
                 }, 1000); // 1秒後にリダイレクト
             },
             () => {
-                handleLocationError(true, infoWindow, map.getCenter());
+                handleLocationError(true, infoWindow, { lat: 0, lng: 0 }); // mapが存在しない場合のデフォルト位置
             }
         );
     } else {
         // Browser doesn't support Geolocation
-        handleLocationError(false, infoWindow, map.getCenter());
+        handleLocationError(false, infoWindow, { lat: 0, lng: 0 }); // デフォルト位置
     }
 }
 
