@@ -91,51 +91,75 @@
                 marker.addListener("gmp-click", () => {
                     infoWindow.close();
                     const detail_content = document.createElement("div");
+
+                    // Bootstrap用のカードデザインを適用
+                    detail_content.classList.add("card");
+                    detail_content.style.maxWidth = "100%";  // 幅をスマホでも収まるように100%に設定
+                    detail_content.style.margin = "0 auto";  // カードが中央に表示されるように調整
+
+                    // 画像部分にBootstrapのカードクラスを追加
                     const imageElement = document.createElement("img");
                     imageElement.src = beach_flag_img_src;
-                    imageElement.style.width = "120px"; // 画像のサイズ調整
-                    imageElement.style.height = "120px"; // 画像のサイズ調整
+                    imageElement.classList.add("card-img-top");  // カードのトップ画像にする
+                    imageElement.style.objectFit = "cover";  // 画像のアスペクト比を維持
+                    imageElement.style.height = "150px";  // 画像の高さをスマホでも適切に表示されるように設定
                     detail_content.appendChild(imageElement);
 
-                    // 店舗のタイトルを表示
+                    // カードの本文部分を作成
+                    const cardBody = document.createElement("div");
+                    cardBody.classList.add("card-body", "p-2");  // パディングを小さくしてコンテンツが詰まるのを防ぐ
+
+                    // 店舗のタイトルを表示 (Bootstrapのクラスを使って強調)
                     const nameElement = document.createElement("h5");
+                    nameElement.classList.add("card-title");
                     nameElement.textContent = title;
-                    detail_content.appendChild(nameElement);
-                    
+                    cardBody.appendChild(nameElement);
+
                     // 店舗の種類を表示
                     const placeTypeElement = document.createElement("p");
+                    placeTypeElement.classList.add("card-text", "small");  // テキストを小さくする
                     placeTypeElement.textContent = primary_type_display_name;
-                    detail_content.appendChild(placeTypeElement);
+                    cardBody.appendChild(placeTypeElement);
 
-                    // business_statusがOPERATIONALの場合は「営業中」、CLOSED_TEMPORARILYの場合は「一時休業中」、CLOSED_PERMANENTLYの場合は「閉店済み」と表示
+                    // 営業状態を表示
                     const placeBusinessStatusElement = document.createElement("p");
+                    placeBusinessStatusElement.classList.add("card-text", "small");  // テキストを小さくする
                     if (business_status === "OPERATIONAL") {
                         placeBusinessStatusElement.textContent = "営業中";
+                        placeBusinessStatusElement.classList.add("text-success");
                     } else if (business_status === "CLOSED_TEMPORARILY") {
                         placeBusinessStatusElement.textContent = "一時休業中";
+                        placeBusinessStatusElement.classList.add("text-warning");
                     } else if (business_status === "CLOSED_PERMANENTLY") {
                         placeBusinessStatusElement.textContent = "閉店済み";
+                        placeBusinessStatusElement.classList.add("text-danger");
                     }
-                    detail_content.appendChild(placeBusinessStatusElement);
+                    cardBody.appendChild(placeBusinessStatusElement);
 
                     // 評価を表示
                     const placeRatingElement = document.createElement("p");
+                    placeRatingElement.classList.add("card-text", "small");  // テキストを小さくする
                     placeRatingElement.textContent = `評価: ${rating}`;
-                    detail_content.appendChild(placeRatingElement);
-                    
+                    cardBody.appendChild(placeRatingElement);
+
                     // レビュー数を表示
                     const placeUserRatingCountElement = document.createElement("p");
+                    placeUserRatingCountElement.classList.add("card-text", "small");  // テキストを小さくする
                     placeUserRatingCountElement.textContent = `レビュー数: ${user_rating_count}`;
-                    detail_content.appendChild(placeUserRatingCountElement);
+                    cardBody.appendChild(placeUserRatingCountElement);
 
-                    // 「Google Mapsで見る」リンクを挿入し、新しいタブで開くようにする
+                    // 「Google Mapsで見る」リンクを挿入
                     const placeUrlElement = document.createElement("a");
                     placeUrlElement.href = google_maps_uri;
                     placeUrlElement.target = "_blank";
                     placeUrlElement.textContent = "Google Mapsで見る";
-                    detail_content.appendChild(placeUrlElement);
+                    placeUrlElement.classList.add("btn", "btn-primary", "btn-sm", "mt-2");  // スマホ向けに小さいボタンにする
+                    cardBody.appendChild(placeUrlElement);
 
+                    // カード本文を詳細コンテンツに追加
+                    detail_content.appendChild(cardBody);
 
+                    // infoWindowにセットして開く
                     infoWindow.setContent(detail_content);
                     infoWindow.open(marker.map, marker);
                 });
