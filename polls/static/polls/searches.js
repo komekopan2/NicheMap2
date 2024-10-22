@@ -12,7 +12,7 @@ async function initMap() {
                 };
                 map = new Map(document.getElementById("map"), {
                     center: pos,
-                    zoom: 4,
+                    zoom: 3,
                     mapId: "4d7250671e5b361d",
                 });
 

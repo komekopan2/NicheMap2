@@ -7,6 +7,8 @@
     {#Bootstrap CSS を追加#}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'polls/searches_with_geolocation.css' %}"/>
+    {# スマホ対応のためのviewport設定#}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="module">
         let map, infoWindow;
 
@@ -17,7 +19,7 @@
             infoWindow = new InfoWindow();  // InfoWindowを初期化
             map = new Map(document.getElementById("map"), {
                 center: {lat: {{ geolocation.lat }}, lng: {{ geolocation.lng }}},
-                zoom: 16,
+                zoom: 15,
                 mapId: "4d7250671e5b361d",
             });
             let restaurants = [];
@@ -27,8 +29,8 @@
                 // A marker with a with a URL pointing to a PNG.
                 beachFlagImg = document.createElement("img");
                 beachFlagImg.src = "{% static 'media/' %}{{ saved_restaurant.photos }}";
-                beachFlagImg.style.width = "100px"; // 画像のサイズ調整
-                beachFlagImg.style.height = "100px"; // 画像のサイズ調整
+                beachFlagImg.style.width = "80px"; // 画像のサイズ調整
+                beachFlagImg.style.height = "80px"; // 画像のサイズ調整
                 beachFlagImg.style.borderRadius = "50%"; // 丸い形にする
                 restaurants.push({
                     position: {
@@ -62,10 +64,10 @@
             let locationButton = document.createElement("button");
             locationButton.textContent = "この付近を検索";
             locationButton.classList.add("btn", "btn-primary", "custom-map-control-button");
-            locationButton.style.margin = "50px";  // 余白を追加
-            locationButton.style.padding = "20px 40px";  // パディングを追加
-            locationButton.style.borderRadius = "50px";  // ボーダーの丸みを追加
-            locationButton.style.fontSize = "36px";  // 文字サイズを調整
+            locationButton.style.margin = "60px";  // 余白を追加
+            locationButton.style.padding = "10px 20px";  // パディングを追加
+            locationButton.style.borderRadius = "30px";  // ボーダーの丸みを追加
+            locationButton.style.fontSize = "16px";  // 文字サイズを調整
             map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
             locationButton.addEventListener("click", () => {
                 {#中心座標の取得#}
