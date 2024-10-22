@@ -8,8 +8,8 @@ def nearby_search_api(geolocation):
     url = 'https://places.googleapis.com/v1/places:searchNearby'
     headers = {'Content-Type': 'application/json',
                'X-Goog-Api-Key': settings.SERVER_MAPS_API_KEY,
-               'X-Goog-FieldMask': 'places.displayName,places.websiteUri,places.googleMapsUri,places.id,places.location,places.photos,places.primaryTypeDisplayName,places.id'
-    }
+               'X-Goog-FieldMask': 'places.displayName,places.googleMapsUri,places.location,places.photos,places.primaryTypeDisplayName,places.rating,places.businessStatus,places.userRatingCount'
+               }
     data = {'includedPrimaryTypes': ['restaurant'],
             'maxResultCount': 3,
             'languageCode': 'ja',
@@ -20,7 +20,7 @@ def nearby_search_api(geolocation):
                     'center': {
                         'latitude': geolocation['lat'],
                         'longitude': geolocation['lng']},
-                    'radius': 1000.0
+                    'radius': 500.0
                 }
             }
             }
@@ -33,5 +33,4 @@ def nearby_search_api(geolocation):
         return
 
     return response.json()
-
 

@@ -4,57 +4,58 @@
     <title>Default Advanced Marker</title>
     <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=default"></script>
 
+    {#Bootstrap CSS を追加#}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="{% static 'polls/searches_with_geolocation.css' %}"/>
-    <script>
-        let map;
+    {# スマホ対応のためのviewport設定#}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module">
+        import { createMarkers } from "{% static 'polls/searches_with_geolocation.js' %}";
+        let map, infoWindow;
 
-        function initMap() {
-            map = new google.maps.Map(document.getElementById("map"), {
+        async function initMap() {
+            const {InfoWindow, Map} = await google.maps.importLibrary("maps");
+            const {AdvancedMarkerView} = await google.maps.importLibrary("marker");
+
+            infoWindow = new InfoWindow();  // InfoWindowを初期化
+            map = new Map(document.getElementById("map"), {
                 center: {lat: {{ geolocation.lat }}, lng: {{ geolocation.lng }}},
-                zoom: 14,
+                zoom: 15,
                 mapId: "4d7250671e5b361d",
             });
+            //////////////////////////////////////////////////////
+            // 保存されたレストラン情報を取得してマーカーを作成する
+            //////////////////////////////////////////////////////
             let restaurants = [];
-            let beachFlagImg;
-            {#restaurantsリストの個数だけループ#}
             {% for saved_restaurant in saved_restaurants %}
-                // A marker with a with a URL pointing to a PNG.
-                beachFlagImg = document.createElement("img");
-                beachFlagImg.src = "{% static 'media/' %}{{ saved_restaurant.photos }}";
                 restaurants.push({
                     position: {
                         lat: {{ saved_restaurant.location.latitude }},
                         lng: {{ saved_restaurant.location.longitude }}
                     },
                     title: "{{ saved_restaurant.display_name }}",
-                    content: beachFlagImg,
+                    google_maps_uri: "{{ saved_restaurant.google_maps_uri }}",
+                    primary_type_display_name: "{{ saved_restaurant.primary_type_display_name }}",
+                    rating: "{{ saved_restaurant.rating }}",
+                    business_status: "{{ saved_restaurant.business_status }}",
+                    user_rating_count: "{{ saved_restaurant.user_rating_count }}",
+                    beach_flag_img_src: "{% static 'media/' %}{{ saved_restaurant.photos }}"
                 });
-
             {% endfor %}
 
-            const infoWindow = new google.maps.InfoWindow();
-
-            // Create the markers.
-            restaurants.forEach(({position, title, content},i) => {
-                const marker = new google.maps.marker.AdvancedMarkerView({
-                    position,
-                    map,
-                    title: `${i + 1}. ${title}`,
-                    content
-                });
-                
-                // Add a click listener for each marker, and set up the info window.
-                marker.addListener("gmp-click", () => {
-
-                    infoWindow.close();
-                    infoWindow.setContent(marker.title);
-                    infoWindow.open(marker.map, marker);
-                });
-            });
-            {#polls/seaches/のオプションパラメータに中心座標を追加したボタンを表示#}
+            createMarkers(map, restaurants, infoWindow);
+            
+            //////////////////////////////////////////////////////
+            // この付近を検索ボタンを追加
+            //////////////////////////////////////////////////////
             let locationButton = document.createElement("button");
             locationButton.textContent = "この付近を検索";
-            locationButton.classList.add("custom-map-control-button");
+            locationButton.classList.add("btn", "btn-primary", "custom-map-control-button");
+            locationButton.style.margin = "60px";  // 余白を追加
+            locationButton.style.padding = "10px 20px";  // パディングを追加
+            locationButton.style.borderRadius = "30px";  // ボーダーの丸みを追加
+            locationButton.style.fontSize = "16px";  // 文字サイズを調整
             map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
             locationButton.addEventListener("click", () => {
                 {#中心座標の取得#}
@@ -65,7 +66,7 @@
 
         }
 
-        window.initMap = initMap;
+        initMap();
     </script>
 </head>
 <body>
@@ -78,9 +79,27 @@
   See https://developers.google.com/maps/documentation/javascript/load-maps-js-api
   for more information.
   -->
-<script
-        src="https://maps.googleapis.com/maps/api/js?key={{ front_maps_api_key }}&callback=initMap&libraries=marker,places&v=beta"
-        defer
-></script>
+<script>
+    (g => {
+        var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__",
+            m = document, b = window;
+        b = b[c] || (b[c] = {});
+        var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams,
+            u = () => h || (h = new Promise(async (f, n) => {
+                await (a = m.createElement("script"));
+                e.set("libraries", [...r] + "");
+                for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                e.set("callback", c + ".maps." + q);
+                a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+                d[q] = f;
+                a.onerror = () => h = n(Error(p + " could not load."));
+                a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                m.head.append(a)
+            }));
+        d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
+    })({
+        key: "{{ front_maps_api_key }}", v: "beta"
+    });
+</script>
 </body>
 </html>
