@@ -32,35 +32,48 @@
                 mapId: "4d7250671e5b361d",
             });
             let restaurants = [];
-            let beachFlagImg;
             {#restaurantsリストの個数だけループ#}
             {% for saved_restaurant in saved_restaurants %}
                 // A marker with a with a URL pointing to a PNG.
-                beachFlagImg = document.createElement("img");
-                beachFlagImg.src = "{% static 'media/' %}{{ saved_restaurant.photos }}";
-                beachFlagImg.style.width = "80px"; // 画像のサイズ調整
-                beachFlagImg.style.height = "80px"; // 画像のサイズ調整
-                beachFlagImg.style.borderRadius = "50%"; // 丸い形にする
                 restaurants.push({
                     position: {
                         lat: {{ saved_restaurant.location.latitude }},
                         lng: {{ saved_restaurant.location.longitude }}
                     },
                     title: "{{ saved_restaurant.display_name }}",
-                    content: beachFlagImg,
+                    google_maps_uri: "{{ saved_restaurant.google_maps_uri }}",
+                    primary_type_display_name: "{{ saved_restaurant.primary_type_display_name }}",
+                    rating: "{{ saved_restaurant.rating }}",
+                    business_status: "{{ saved_restaurant.business_status }}",
+                    user_rating_count: "{{ saved_restaurant.user_rating_count }}",
+                    beach_flag_img_src: "{% static 'media/' %}{{ saved_restaurant.photos }}"
                 });
 
             {% endfor %}
 
+            let beachFlagImg;
             // Create the markers.
-            restaurants.forEach(({position, title, content}, i) => {
+            restaurants.forEach(({
+                                     position,
+                                     title,
+                                     google_maps_uri,
+                                     primary_type_display_name,
+                                     rating,
+                                     business_status,
+                                     user_rating_count,
+                                     beach_flag_img_src
+                                 }, i) => {
+                beachFlagImg = document.createElement("img");
+                beachFlagImg.src = beach_flag_img_src;
+                beachFlagImg.style.width = "80px"; // 画像のサイズ調整
+                beachFlagImg.style.height = "80px"; // 画像のサイズ調整
+                beachFlagImg.style.borderRadius = "50%"; // 丸い形にする
                 const marker = new AdvancedMarkerView({
                     position,
                     map,
-                    title: `${i + 1}. ${title}`,
-                    content
+                    content: beachFlagImg,
                 });
-                
+
                 const element = marker.content;
 
                 element.style.opacity = "0";
@@ -76,9 +89,54 @@
 
                 // Add a click listener for each marker, and set up the info window.
                 marker.addListener("gmp-click", () => {
-
                     infoWindow.close();
-                    infoWindow.setContent(marker.title);
+                    const detail_content = document.createElement("div");
+                    const imageElement = document.createElement("img");
+                    imageElement.src = beach_flag_img_src;
+                    imageElement.style.width = "120px"; // 画像のサイズ調整
+                    imageElement.style.height = "120px"; // 画像のサイズ調整
+                    detail_content.appendChild(imageElement);
+
+                    // 店舗のタイトルを表示
+                    const nameElement = document.createElement("h5");
+                    nameElement.textContent = title;
+                    detail_content.appendChild(nameElement);
+                    
+                    // 店舗の種類を表示
+                    const placeTypeElement = document.createElement("p");
+                    placeTypeElement.textContent = primary_type_display_name;
+                    detail_content.appendChild(placeTypeElement);
+
+                    // business_statusがOPERATIONALの場合は「営業中」、CLOSED_TEMPORARILYの場合は「一時休業中」、CLOSED_PERMANENTLYの場合は「閉店済み」と表示
+                    const placeBusinessStatusElement = document.createElement("p");
+                    if (business_status === "OPERATIONAL") {
+                        placeBusinessStatusElement.textContent = "営業中";
+                    } else if (business_status === "CLOSED_TEMPORARILY") {
+                        placeBusinessStatusElement.textContent = "一時休業中";
+                    } else if (business_status === "CLOSED_PERMANENTLY") {
+                        placeBusinessStatusElement.textContent = "閉店済み";
+                    }
+                    detail_content.appendChild(placeBusinessStatusElement);
+
+                    // 評価を表示
+                    const placeRatingElement = document.createElement("p");
+                    placeRatingElement.textContent = `評価: ${rating}`;
+                    detail_content.appendChild(placeRatingElement);
+                    
+                    // レビュー数を表示
+                    const placeUserRatingCountElement = document.createElement("p");
+                    placeUserRatingCountElement.textContent = `レビュー数: ${user_rating_count}`;
+                    detail_content.appendChild(placeUserRatingCountElement);
+
+                    // 「Google Mapsで見る」リンクを挿入し、新しいタブで開くようにする
+                    const placeUrlElement = document.createElement("a");
+                    placeUrlElement.href = google_maps_uri;
+                    placeUrlElement.target = "_blank";
+                    placeUrlElement.textContent = "Google Mapsで見る";
+                    detail_content.appendChild(placeUrlElement);
+
+
+                    infoWindow.setContent(detail_content);
                     infoWindow.open(marker.map, marker);
                 });
             });

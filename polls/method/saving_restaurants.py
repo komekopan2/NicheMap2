@@ -23,9 +23,15 @@ def saving_restaurants(restaurants):
                 f.write(response.content)
         finally:
             saved_restaurant = {
-                'location': restaurant['location'],
                 'display_name': restaurant['displayName']['text'],
+                'google_maps_uri': restaurant['googleMapsUri'],
+                'location': restaurant['location'],
                 'photos': served_photo_name,
+                'primary_type_display_name': restaurant['primaryTypeDisplayName']['text'],
+                'rating': restaurant['rating'],
+                'business_status': restaurant['businessStatus'],
+                'user_rating_count': restaurant['userRatingCount'],
             }
             saved_restaurants.append(saved_restaurant)
+            print(saved_restaurants)
     return saved_restaurants
