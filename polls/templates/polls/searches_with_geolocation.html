@@ -63,13 +63,6 @@
                 let geolocation = center.lat() + "," + center.lng();
                 location.href = "/polls/searches/" + geolocation + "/";
             });
-            
-            //////////////////////////////////////////////////////
-            // ウィンドウリサイズ時のイベントリスナーを追加
-            //////////////////////////////////////////////////////
-            window.addEventListener('resize', () => {
-                google.maps.event.trigger(map, 'resize');
-            });
 
         }
 
