@@ -20,7 +20,7 @@ def nearby_search_api(geolocation):
                     'center': {
                         'latitude': geolocation['lat'],
                         'longitude': geolocation['lng']},
-                    'radius': 1000.0
+                    'radius': 500.0
                 }
             }
             }

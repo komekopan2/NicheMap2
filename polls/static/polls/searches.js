@@ -12,15 +12,9 @@ async function initMap() {
                 };
                 map = new Map(document.getElementById("map"), {
                     center: pos,
-                    zoom: 14,
+                    zoom: 4,
                     mapId: "4d7250671e5b361d",
                 });
-
-                // polls/seaches/のオプションパラメータに中心座標を追加したボタンを表示
-                let locationButton = document.createElement("button");
-                locationButton.textContent = "この付近を検索";
-                locationButton.classList.add("custom-map-control-button");
-                map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
 
                 setTimeout(() => {
                     // 中心座標の取得

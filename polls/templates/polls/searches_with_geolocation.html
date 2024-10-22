@@ -17,7 +17,7 @@
             infoWindow = new InfoWindow();  // InfoWindowを初期化
             map = new Map(document.getElementById("map"), {
                 center: {lat: {{ geolocation.lat }}, lng: {{ geolocation.lng }}},
-                zoom: 14,
+                zoom: 16,
                 mapId: "4d7250671e5b361d",
             });
             let restaurants = [];
@@ -63,9 +63,9 @@
             locationButton.textContent = "この付近を検索";
             locationButton.classList.add("btn", "btn-primary", "custom-map-control-button");
             locationButton.style.margin = "50px";  // 余白を追加
-            locationButton.style.padding = "15px 30px";  // パディングを追加
+            locationButton.style.padding = "20px 40px";  // パディングを追加
             locationButton.style.borderRadius = "50px";  // ボーダーの丸みを追加
-            locationButton.style.fontSize = "48px";  // 文字サイズを調整
+            locationButton.style.fontSize = "36px";  // 文字サイズを調整
             map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
             locationButton.addEventListener("click", () => {
                 {#中心座標の取得#}
