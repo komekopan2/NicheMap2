@@ -12,9 +12,18 @@
     <script type="module">
         let map, infoWindow;
 
+        const intersectionObserver = new IntersectionObserver((entries) => {
+            for (const entry of entries) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("drop");
+                    intersectionObserver.unobserve(entry.target);
+                }
+            }
+        });
+
         async function initMap() {
-            const { InfoWindow, Map } = await google.maps.importLibrary("maps");
-            const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
+            const {InfoWindow, Map} = await google.maps.importLibrary("maps");
+            const {AdvancedMarkerView} = await google.maps.importLibrary("marker");
 
             infoWindow = new InfoWindow();  // InfoWindowを初期化
             map = new Map(document.getElementById("map"), {
@@ -52,6 +61,19 @@
                     content
                 });
                 
+                const element = marker.content;
+
+                element.style.opacity = "0";
+                element.addEventListener("animationend", (event) => {
+                    element.classList.remove("drop");
+                    element.style.opacity = "1";
+                });
+
+                const time = 1 + Math.random(); // 1s delay for easy to see the animation
+
+                element.style.setProperty("--delay-time", time + "s");
+                intersectionObserver.observe(element);
+
                 // Add a click listener for each marker, and set up the info window.
                 marker.addListener("gmp-click", () => {
 
