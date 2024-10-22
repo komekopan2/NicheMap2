@@ -12,7 +12,7 @@ def saving_restaurants(restaurants):
             with open('polls/static/media/' + served_photo_name, 'rb') as f:
                 pass
         except FileNotFoundError:
-            url = "https://places.googleapis.com/v1/" + restaurant_photo_name + "/media?key=" + settings.SERVER_MAPS_API_KEY + "&maxHeightPx=100&maxWidthPx=100"
+            url = "https://places.googleapis.com/v1/" + restaurant_photo_name + "/media?key=" + settings.SERVER_MAPS_API_KEY + "&maxHeightPx=400&maxWidthPx=400"
             response = requests.get(url)
             if response.status_code != 200:
                 print(response.status_code)
