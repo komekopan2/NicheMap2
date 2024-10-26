@@ -85,3 +85,11 @@ body {
 [class$=api-load-alpha-banner] {
   display: none;
 }
+
+.custom-marker {
+    width: 20px;
+    height: 20px;
+    background-color: #4285F4;
+    border-radius: 50%;
+    border: 2px solid #FFFFFF;
+}
