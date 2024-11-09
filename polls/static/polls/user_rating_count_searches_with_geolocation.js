@@ -132,7 +132,7 @@ export function createMarkers(map, restaurants, infoWindow) {
             placeUrlElement.href = google_maps_uri;
             placeUrlElement.target = "_blank";
             placeUrlElement.textContent = "Google Mapsで見る";
-            placeUrlElement.classList.add("btn", "btn-primary", "btn-sm", "mt-2");  // スマホ向けに小さいボタンにする
+            placeUrlElement.classList.add("btn", "btn-secondary", "btn-sm", "mt-2");  // スマホ向けに小さいボタンにする
             cardBody.appendChild(placeUrlElement);
 
             // カード本文を詳細コンテンツに追加
