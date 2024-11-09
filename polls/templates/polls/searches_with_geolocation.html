@@ -10,6 +10,10 @@
     <link rel="stylesheet" type="text/css" href="{% static 'polls/searches_with_geolocation.css' %}"/>
     {# スマホ対応のためのviewport設定#}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<div id="map"></div>
+
     <script type="module">
         import {createMarkers} from "{% static 'polls/searches_with_geolocation.js' %}";
         let map, infoWindow;
@@ -102,17 +106,7 @@
 
         initMap();
     </script>
-</head>
-<body>
-<div id="map"></div>
 
-<!--
-  The `defer` attribute causes the callback to execute after the full HTML
-  document has been parsed. For non-blocking uses, avoiding race conditions,
-  and consistent behavior across browsers, consider loading using Promises.
-  See https://developers.google.com/maps/documentation/javascript/load-maps-js-api
-  for more information.
-  -->
 <script>
     (g => {
         var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__",
