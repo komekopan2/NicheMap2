@@ -7,7 +7,7 @@
     {#Bootstrap CSS を追加#}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" type="text/css" href="{% static 'polls/searches_with_geolocation.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'polls/user_rating_count_searches_with_geolocation.css' %}"/>
     {# スマホ対応のためのviewport設定#}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -34,7 +34,7 @@
 </div>
 
 <script type="module">
-    import {createMarkers} from "{% static 'polls/searches_with_geolocation.js' %}";
+    import {createMarkers} from "{% static 'polls/user_rating_count_searches_with_geolocation.js' %}";
 
     let map, infoWindow;
 
@@ -109,7 +109,7 @@
         //////////////////////////////////////////////////////
         let locationButton = document.createElement("button");
         locationButton.textContent = "この付近を検索";
-        locationButton.classList.add("btn", "btn-primary", "custom-map-control-button");
+        locationButton.classList.add("btn", "btn-secondary", "custom-map-control-button");
         locationButton.style.margin = "60px";  // 余白を追加
         locationButton.style.padding = "10px 20px";  // パディングを追加
         locationButton.style.borderRadius = "30px";  // ボーダーの丸みを追加
@@ -119,7 +119,7 @@
             {#中心座標の取得#}
             const center = map.getCenter();
             let geolocation = center.lat() + "," + center.lng();
-            location.href = "/polls/searches/" + geolocation + "/";
+            location.href = "/polls/user_rating_count_searches/" + geolocation + "/";
         });
 
         //////////////////////////////////////////////////////
@@ -127,7 +127,7 @@
         //////////////////////////////////////////////////////
         const nextButton = document.createElement("button");
         nextButton.innerHTML = `<i class="bi bi-map-fill"></i>　地図を選択`;
-        nextButton.classList.add("btn", "btn-primary", "custom-map-control-button");
+        nextButton.classList.add("btn", "btn-secondary", "custom-map-control-button");
         nextButton.style.margin = "10px"
         nextButton.style.padding = "10px 20px";
         nextButton.style.borderRadius = "30px";
