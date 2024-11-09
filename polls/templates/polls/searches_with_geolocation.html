@@ -14,98 +14,99 @@
 <body>
 <div id="map"></div>
 
-    <script type="module">
-        import {createMarkers} from "{% static 'polls/searches_with_geolocation.js' %}";
-        let map, infoWindow;
+<script type="module">
+    import {createMarkers} from "{% static 'polls/searches_with_geolocation.js' %}";
 
-        async function initMap() {
-            const {InfoWindow, Map} = await google.maps.importLibrary("maps");
-            const {AdvancedMarkerView} = await google.maps.importLibrary("marker");
+    let map, infoWindow;
 
-            infoWindow = new InfoWindow();  // InfoWindowを初期化
-            map = new Map(document.getElementById("map"), {
-                center: {lat: {{ geolocation.lat }}, lng: {{ geolocation.lng }}},
-                zoom: 15,
-                mapId: "4d7250671e5b361d",
-            });
-            //////////////////////////////////////////////////////
-            // 現在地の取得とAdvancedMarkerViewでのマーカー表示
-            //////////////////////////////////////////////////////
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const userPosition = {
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude,
-                        };
+    async function initMap() {
+        const {InfoWindow, Map} = await google.maps.importLibrary("maps");
+        const {AdvancedMarkerView} = await google.maps.importLibrary("marker");
 
-                        // AdvancedMarkerViewを使って現在地マーカーを作成
-                        const userMarker = new AdvancedMarkerView({
-                            position: userPosition,
-                            map: map,
-                            title: "Your Location",
-                            content: document.createElement("div"),
-                        });
+        infoWindow = new InfoWindow();  // InfoWindowを初期化
+        map = new Map(document.getElementById("map"), {
+            center: {lat: {{ geolocation.lat }}, lng: {{ geolocation.lng }}},
+            zoom: 15,
+            mapId: "4d7250671e5b361d",
+        });
+        //////////////////////////////////////////////////////
+        // 現在地の取得とAdvancedMarkerViewでのマーカー表示
+        //////////////////////////////////////////////////////
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const userPosition = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    };
 
-                        // マーカーのカスタムアイコンを設定
-                        userMarker.content.classList.add("custom-marker");
-                        userMarker.content.style.width = "20px";
-                        userMarker.content.style.height = "20px";
-                        userMarker.content.style.backgroundColor = "#4285F4";
-                        userMarker.content.style.borderRadius = "50%";
-                        userMarker.content.style.border = "2px solid #FFFFFF";
-                    },
-                    () => {
-                        console.error("現在地が取得できませんでした。");
-                    }
-                );
-            } else {
-                console.error("このブラウザではGeolocation APIがサポートされていません。");
-            }
-            //////////////////////////////////////////////////////
-            // 保存されたレストラン情報を取得してマーカーを作成する
-            //////////////////////////////////////////////////////
-            let restaurants = [];
-            {% for saved_restaurant in saved_restaurants %}
-                restaurants.push({
-                    position: {
-                        lat: {{ saved_restaurant.location.latitude }},
-                        lng: {{ saved_restaurant.location.longitude }}
-                    },
-                    title: "{{ saved_restaurant.display_name }}",
-                    google_maps_uri: "{{ saved_restaurant.google_maps_uri }}",
-                    primary_type_display_name: "{{ saved_restaurant.primary_type_display_name }}",
-                    rating: "{{ saved_restaurant.rating }}",
-                    business_status: "{{ saved_restaurant.business_status }}",
-                    user_rating_count: "{{ saved_restaurant.user_rating_count }}",
-                    beach_flag_img_src: "{% static 'media/' %}{{ saved_restaurant.photos }}"
-                });
-            {% endfor %}
+                    // AdvancedMarkerViewを使って現在地マーカーを作成
+                    const userMarker = new AdvancedMarkerView({
+                        position: userPosition,
+                        map: map,
+                        title: "Your Location",
+                        content: document.createElement("div"),
+                    });
 
-            createMarkers(map, restaurants, infoWindow);
-
-            //////////////////////////////////////////////////////
-            // この付近を検索ボタンを追加
-            //////////////////////////////////////////////////////
-            let locationButton = document.createElement("button");
-            locationButton.textContent = "この付近を検索";
-            locationButton.classList.add("btn", "btn-primary", "custom-map-control-button");
-            locationButton.style.margin = "60px";  // 余白を追加
-            locationButton.style.padding = "10px 20px";  // パディングを追加
-            locationButton.style.borderRadius = "30px";  // ボーダーの丸みを追加
-            locationButton.style.fontSize = "16px";  // 文字サイズを調整
-            map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
-            locationButton.addEventListener("click", () => {
-                {#中心座標の取得#}
-                const center = map.getCenter();
-                let geolocation = center.lat() + "," + center.lng();
-                location.href = "/polls/searches/" + geolocation + "/";
-            });
-
+                    // マーカーのカスタムアイコンを設定
+                    userMarker.content.classList.add("custom-marker");
+                    userMarker.content.style.width = "20px";
+                    userMarker.content.style.height = "20px";
+                    userMarker.content.style.backgroundColor = "#4285F4";
+                    userMarker.content.style.borderRadius = "50%";
+                    userMarker.content.style.border = "2px solid #FFFFFF";
+                },
+                () => {
+                    console.error("現在地が取得できませんでした。");
+                }
+            );
+        } else {
+            console.error("このブラウザではGeolocation APIがサポートされていません。");
         }
+        //////////////////////////////////////////////////////
+        // 保存されたレストラン情報を取得してマーカーを作成する
+        //////////////////////////////////////////////////////
+        let restaurants = [];
+        {% for saved_restaurant in saved_restaurants %}
+            restaurants.push({
+                position: {
+                    lat: {{ saved_restaurant.location.latitude }},
+                    lng: {{ saved_restaurant.location.longitude }}
+                },
+                title: "{{ saved_restaurant.display_name }}",
+                google_maps_uri: "{{ saved_restaurant.google_maps_uri }}",
+                primary_type_display_name: "{{ saved_restaurant.primary_type_display_name }}",
+                rating: "{{ saved_restaurant.rating }}",
+                business_status: "{{ saved_restaurant.business_status }}",
+                user_rating_count: "{{ saved_restaurant.user_rating_count }}",
+                beach_flag_img_src: "{% static 'media/' %}{{ saved_restaurant.photos }}"
+            });
+        {% endfor %}
 
-        initMap();
-    </script>
+        createMarkers(map, restaurants, infoWindow);
+
+        //////////////////////////////////////////////////////
+        // この付近を検索ボタンを追加
+        //////////////////////////////////////////////////////
+        let locationButton = document.createElement("button");
+        locationButton.textContent = "この付近を検索";
+        locationButton.classList.add("btn", "btn-primary", "custom-map-control-button");
+        locationButton.style.margin = "60px";  // 余白を追加
+        locationButton.style.padding = "10px 20px";  // パディングを追加
+        locationButton.style.borderRadius = "30px";  // ボーダーの丸みを追加
+        locationButton.style.fontSize = "16px";  // 文字サイズを調整
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
+        locationButton.addEventListener("click", () => {
+            {#中心座標の取得#}
+            const center = map.getCenter();
+            let geolocation = center.lat() + "," + center.lng();
+            location.href = "/polls/searches/" + geolocation + "/";
+        });
+
+    }
+
+    initMap();
+</script>
 
 <script>
     (g => {
