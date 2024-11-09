@@ -23,8 +23,11 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>この地図で次に進みますか？</p>
-        <button id="confirmButton" class="btn btn-primary">次に進む</button>
+        <p>表示するお店の基準を選んでください:</p>
+        <div class="d-grid gap-2">
+          <button id="searches" class="btn btn-outline-primary">高評価のお店から選ぶ（デフォルト）</button>
+          <button id="user_rating_count_searches" class="btn btn-outline-secondary">レビュー人数が多い店から選ぶ</button>
+          <button id="niche" class="btn btn-outline-success">ニッチなお店から選ぶ（本アプリ限定）</button>
       </div>
     </div>
   </div>
@@ -137,11 +140,25 @@
             mapModal.show();
         });
 
-        // モーダル内の「次に進む」ボタンのクリックイベント
-        document.getElementById("confirmButton").addEventListener("click", () => {
+        // モーダル内のsearchesボタンをクリックしたときのイベント
+        document.getElementById("searches").addEventListener("click", () => {
             const center = map.getCenter();
             const geolocation = center.lat() + "," + center.lng();
-            location.href = `/polls/searches/${geolocation}/next/`;
+            location.href = "/polls/searches/" + geolocation + "/";
+        });
+
+        // モーダル内のuser_rating_count_searchesボタンをクリックしたときのイベント
+        document.getElementById("user_rating_count_searches").addEventListener("click", () => {
+            const center = map.getCenter();
+            const geolocation = center.lat() + "," + center.lng();
+            location.href = "/polls/user_rating_count_searches/" + geolocation + "/";
+        });
+
+        // モーダル内のnicheボタンをクリックしたときのイベント
+        document.getElementById("niche").addEventListener("click", () => {
+            const center = map.getCenter();
+            const geolocation = center.lat() + "," + center.lng();
+            location.href = "/polls/niche/" + geolocation + "/";
         });
     }
 
