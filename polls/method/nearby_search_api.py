@@ -11,7 +11,7 @@ def nearby_search_api(geolocation):
                'X-Goog-FieldMask': 'places.displayName,places.googleMapsUri,places.location,places.photos,places.primaryTypeDisplayName,places.rating,places.businessStatus,places.userRatingCount'
                }
     data = {'includedPrimaryTypes': ['restaurant'],
-            'maxResultCount': 3,
+            'maxResultCount': 20,
             'languageCode': 'ja',
             'regionCode': 'JP',
             'rankPreference': 'POPULARITY',
