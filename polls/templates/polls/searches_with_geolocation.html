@@ -14,6 +14,22 @@
 <body>
 <div id="map"></div>
 
+<!-- Bootstrap モーダル -->
+<div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="mapModalLabel">地図を選択</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>この地図で次に進みますか？</p>
+        <button id="confirmButton" class="btn btn-primary">次に進む</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="module">
     import {createMarkers} from "{% static 'polls/searches_with_geolocation.js' %}";
 
@@ -103,6 +119,30 @@
             location.href = "/polls/searches/" + geolocation + "/";
         });
 
+        //////////////////////////////////////////////////////
+        // 地図を選ぶボタンを追加
+        //////////////////////////////////////////////////////
+        const nextButton = document.createElement("button");
+        nextButton.innerHTML = `<i class="bi bi-map-fill"></i>　地図を選択`;
+        nextButton.classList.add("btn", "btn-success", "custom-map-control-button");
+        nextButton.style.margin = "10px"
+        nextButton.style.padding = "10px 20px";
+        nextButton.style.borderRadius = "30px";
+        nextButton.style.fontSize = "16px";
+        map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(nextButton);
+
+        // Bootstrap モーダルを表示するためのクリックイベント
+        nextButton.addEventListener("click", () => {
+            const mapModal = new bootstrap.Modal(document.getElementById("mapModal"));
+            mapModal.show();
+        });
+
+        // モーダル内の「次に進む」ボタンのクリックイベント
+        document.getElementById("confirmButton").addEventListener("click", () => {
+            const center = map.getCenter();
+            const geolocation = center.lat() + "," + center.lng();
+            location.href = `/polls/searches/${geolocation}/next/`;
+        });
     }
 
     initMap();
@@ -130,5 +170,7 @@
         key: "{{ front_maps_api_key }}", v: "beta"
     });
 </script>
+<!-- Bootstrap JS 読み込み -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
