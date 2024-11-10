@@ -1,46 +1,46 @@
-let map, infoWindow;
+let map, infoWindow, pos;
 
 async function initMap() {
+    const { InfoWindow, Map } = await google.maps.importLibrary("maps");
+    infoWindow = new InfoWindow();
+
+    // 現在地の取得
     if (navigator.geolocation) {
-        const { InfoWindow, Map } = await google.maps.importLibrary("maps");
-        infoWindow = new InfoWindow();  // InfoWindowを初期化
         navigator.geolocation.getCurrentPosition(
             async (position) => {
-                const pos = {
+                pos = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude,
                 };
-                map = new Map(document.getElementById("map"), {
-                    center: pos,
-                    zoom: 3,
-                    mapId: "4d7250671e5b361d",
-                });
-
-                setTimeout(() => {
-                    // 中心座標の取得
-                    const center = map.getCenter();
-                    let geolocation = center.lat() + "," + center.lng();
-                    window.location.href = "/polls/searches/" + geolocation + "/";
-                }, 1000); // 1秒後にリダイレクト
+                initializeMap();  // 現在地が取得できたらマップを初期化
             },
             () => {
-                handleLocationError(true, infoWindow, {lat: 0, lng: 0}); // mapが存在しない場合のデフォルト位置
+                console.error("現在地が取得できませんでした。");
+                pos = { lat: 35.16647380016069, lng: 136.90548000133316 };
+                initializeMap();  // デフォルト位置でマップを初期化
             }
         );
     } else {
-        // Browser doesn't support Geolocation
-        handleLocationError(false, infoWindow, {lat: 0, lng: 0}); // デフォルト位置
+        console.error("このブラウザではGeolocation APIがサポートされていません。");
+        pos = { lat: 35.16647380016069, lng: 136.90548000133316 };
+        initializeMap();  // デフォルト位置でマップを初期化
     }
 }
 
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-    infoWindow.setPosition(pos);
-    infoWindow.setContent(
-        browserHasGeolocation
-            ? "Error: The Geolocation service failed."
-            : "Error: Your browser doesn't support geolocation."
-    );
-    infoWindow.open(map);
+// 地図を初期化する関数
+function initializeMap() {
+    map = new google.maps.Map(document.getElementById("map"), {
+        center: pos,
+        zoom: 3,
+        mapId: "4d7250671e5b361d",
+    });
+
+    // 1秒後にリダイレクト
+    setTimeout(() => {
+        const center = map.getCenter();
+        let geolocation = center.lat() + "," + center.lng();
+        window.location.href = "/polls/searches/" + geolocation + "/";
+    }, 1000);
 }
 
 initMap();
