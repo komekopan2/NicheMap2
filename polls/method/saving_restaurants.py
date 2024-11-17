@@ -33,5 +33,4 @@ def saving_restaurants(restaurants):
                 'user_rating_count': restaurant['userRatingCount'],
             }
             saved_restaurants.append(saved_restaurant)
-            print(saved_restaurants)
     return saved_restaurants

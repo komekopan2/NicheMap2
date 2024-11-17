@@ -1,5 +1,6 @@
 export function createMarkers(map, restaurants, infoWindow) {
     let beachFlagImg;
+    const markers = []; // マーカーを保存する配列
     const intersectionObserver = new IntersectionObserver((entries) => {
             for (const entry of entries) {
                 if (entry.isIntersecting) {
@@ -33,6 +34,7 @@ export function createMarkers(map, restaurants, infoWindow) {
             map,
             content: beachFlagImg,
         });
+        markers.push(marker); // マーカーを配列に追加
 
         //////////////////////////////////////////////////////
         // マーカーのアニメーションを設定
@@ -143,4 +145,6 @@ export function createMarkers(map, restaurants, infoWindow) {
             infoWindow.open(marker.map, marker);
         });
     });
+    // マーカークラスタリングを適用
+    const markerCluster = new markerClusterer.MarkerClusterer({ markers, map });
 }

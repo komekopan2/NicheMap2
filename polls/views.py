@@ -36,14 +36,6 @@ def vote(request, question_id):
     return HttpResponse("You're voting on question %s." % question_id)
 
 
-def map(request):
-    template = loader.get_template('polls/map_index.html')
-    context = {
-        'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
-    }
-    return HttpResponse(template.render(context, request))
-
-
 @login_required
 def near_by_searches(request):
     template = loader.get_template('polls/near_by_searches.html')
