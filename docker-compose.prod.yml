@@ -51,6 +51,7 @@ services:
     # /code/polls/static以外のstaticディレクトリの配置場所もあるかもしれない
     volumes:
       - media_static:/static/media
+      - nginx-access-log:/var/log/nginx
     # ローカルの80番ボートをコンテナの80番ポートとつなぐ
     ports:
       - "80:80"
@@ -62,3 +63,4 @@ volumes:
   db_data:
   media_static:
   app-bashhistory:
+  nginx-access-log:
