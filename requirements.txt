@@ -6,10 +6,12 @@ cryptography==41.0.5
 defusedxml==0.7.1
 Django==4.2.7
 django-allauth==0.58.1
+pygdal==3.6.2.11
 gunicorn==20.1.0
 idna==3.4
 oauthlib==3.2.2
 psycopg2==2.9.7
+psycopg2-binary
 pycparser==2.21
 PyJWT==2.8.0
 python3-openid==3.2.0

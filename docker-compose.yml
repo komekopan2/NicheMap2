@@ -1,6 +1,8 @@
 services:
   db:
-    image: postgres
+    build:
+      context: .
+      dockerfile: containers/postgres/Dockerfile
     ports:
       - "5432:5432"
     # M1チップでも動くように

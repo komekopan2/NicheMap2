@@ -6,6 +6,15 @@ FROM python:3.9
 ENV PYTHONDONTWRITEBYTECODE=1
 # 標準出力・標準エラーのストリームのバッファリングを行わない
 ENV PYTHONUNBUFFERED=1
+
+# 必要なパッケージをインストール
+RUN apt-get update && apt-get install -y \
+    binutils \
+    libproj-dev \
+    gdal-bin \
+    libgeos-dev \
+    libgdal-dev
+
 # コンテナのワークディレクトリを/codeに指定
 WORKDIR /code
 # ローカルのrequirements.txtをコンテナの/codeフォルダ直下に置く
