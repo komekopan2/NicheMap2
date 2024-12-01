@@ -1,0 +1,8 @@
+{% if error %}
+  <p>{{ error }}</p>
+{% else %}
+  <h1>{{ name }}さんのプロフィール</h1>
+  <p>メール: {{ email }}</p>
+  <img src="{{ picture }}" alt="{{ name }}のプロフィール写真">
+  {{ profile_data }}
+{% endif %}
