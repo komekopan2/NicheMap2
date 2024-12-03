@@ -1,6 +1,4 @@
-### 注意
-- 以下のコマンドは、docker-compose.yml が存在するディレクトリで実行してください。
-- windows_mainブランチで作業してください。
+# docker composeコマンド
 
 ### ローカル環境起動
 ```
@@ -20,11 +18,46 @@ docker compose -f docker-compose.prod.yml build --no-cache
 ```
 docker compose -f docker-compose.prod.yml down
 ```
+# docker execコマンド
 
 ### webコンテナに入ってログを出力
+- コンテナに入る
 ```
 docker exec -it web /bin/sh
+```
 
+- デフォルトのアクセスログをリアルタイムで見る
+```
 tail -f /var/log/nginx/default_access.log
+```
+
+- JSON形式のアクセスログをリアルタイムで見る
+```
 tail -f /var/log/nginx/json_access.log
+```
+
+### dbコンテナに入る
+```
+docker exec -it nichemap2-db-1 /bin/bash
+```
+
+### appコンテナに入る
+```
+docker exec -it nichemap2-app-1 /bin/bash
+```
+# ストレージが足りない場合の対処法
+
+### システムのディスク容量を確認
+```
+df -h
+```
+
+### 全ての停止中コンテナ、未使用イメージ、ネットワーク、ボリュームを一括削除
+```
+docker system prune -a
+```
+
+### Dockerのキャッシュディレクトリをクリア
+```
+docker builder prune
 ```
