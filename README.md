@@ -1,12 +1,14 @@
 # docker composeコマンド
 
 ### ローカル環境起動
+- Dockerfileと関連するファイルに変更があった場合は、イメージ作成のコマンドを叩いてから起動する。
 ```
-docker compose -f docker-compose.prod.yml up --build -d --remove-orphans
+docker compose -f docker-compose.prod.yml up -d --remove-orphans
 ```
 - -f オプションをつけると指定したファイルを使ってコンテナを起動します。
-- --build オプションをつけるとイメージを再ビルドします。
 - -d オプションをつけるとバックグラウンドで起動します。
+- --remove-orphans オプションをつけると未使用のコンテナを削除します。
+- （--build オプションをつけるとイメージを再ビルドします。）
 
 ### イメージ作成
 ```
