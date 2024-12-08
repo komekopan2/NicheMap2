@@ -79,10 +79,10 @@ def searches(request):
 
 
 @login_required
-def searches_with_geolocation(request, query_geolocation):
+def searches_with_geolocation(request, query_geolocation, cuisine):
     # 文字列をカンマで分割してfloatに変換
     geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1])}
-    restaurants = nearby_search_api(geolocation)['places']
+    restaurants = nearby_search_api(geolocation,cuisine)['places']
     top_searches_restaurants = restaurants[:3]
     saved_restaurants = saving_restaurants(top_searches_restaurants)
     print(saved_restaurants)
@@ -90,6 +90,7 @@ def searches_with_geolocation(request, query_geolocation):
     context = {
         'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
         'geolocation': geolocation,
+        'cuisine': cuisine,
         'saved_restaurants': saved_restaurants,
     }
     return HttpResponse(template.render(context, request))

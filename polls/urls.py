@@ -10,7 +10,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('near_by_searches/', views.near_by_searches, name='near_by_searches'),
     # searches/は任意でカンマ区切りの座標を受け取る
-    path('searches/<str:query_geolocation>/', views.searches_with_geolocation, name='searches_with_geolocation'),
+    path('searches/<str:query_geolocation>/<str:cuisine>/', views.searches_with_geolocation, name='searches_with_geolocation'),
     path('searches/', views.searches, name='searches'),
     path('user_rating_count_searches/<str:query_geolocation>/', views.user_rating_count_searches_with_geolocation, name='user_rating_count_searches_with_geolocation'),
 ]

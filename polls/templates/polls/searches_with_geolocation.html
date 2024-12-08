@@ -119,7 +119,7 @@
             {#中心座標の取得#}
             const center = map.getCenter();
             let geolocation = center.lat() + "," + center.lng();
-            location.href = "/polls/searches/" + geolocation + "/";
+            location.href = "/polls/searches/" + geolocation + "/{{ cuisine }}/";
         });
 
         //////////////////////////////////////////////////////
@@ -144,7 +144,7 @@
         document.getElementById("searches").addEventListener("click", () => {
             const center = map.getCenter();
             const geolocation = center.lat() + "," + center.lng();
-            location.href = "/polls/searches/" + geolocation + "/";
+            location.href = "/polls/searches/" + geolocation + "/{{ cuisine }}/";
         });
 
         // モーダル内のuser_rating_count_searchesボタンをクリックしたときのイベント

@@ -4,13 +4,13 @@ from django.conf import settings
 
 # from django.conf import settings
 
-def nearby_search_api(geolocation):
+def nearby_search_api(geolocation,cuisine):
     url = 'https://places.googleapis.com/v1/places:searchNearby'
     headers = {'Content-Type': 'application/json',
                'X-Goog-Api-Key': settings.SERVER_MAPS_API_KEY,
                'X-Goog-FieldMask': 'places.displayName,places.googleMapsUri,places.location,places.photos,places.primaryTypeDisplayName,places.rating,places.businessStatus,places.userRatingCount'
                }
-    data = {'includedPrimaryTypes': ['restaurant'],
+    data = {'includedPrimaryTypes': [cuisine],
             'maxResultCount': 20,
             'languageCode': 'ja',
             'regionCode': 'JP',
@@ -33,4 +33,3 @@ def nearby_search_api(geolocation):
         return
 
     return response.json()
-
