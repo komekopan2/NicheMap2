@@ -16,22 +16,45 @@
 
 <!-- Bootstrap モーダル -->
 <div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="mapModalLabel">地図を選択</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p>表示するお店の基準を選んでください</p>
-        <div class="d-grid gap-2">
-          <button id="searches" class="btn btn-outline-primary">高評価のお店から選ぶ（デフォルト）</button>
-          <button id="user_rating_count_searches" class="btn btn-outline-secondary">レビュー人数が多い店から選ぶ</button>
-          <button id="niche" class="btn btn-outline-success">ニッチなお店から選ぶ（開発中）</button>
-      </div>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mapModalLabel">地図を選択</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>表示するお店の基準を選んでください</p>
+                <div class="d-grid gap-2">
+                    <button id="searches" class="btn btn-outline-primary">高評価のお店から選ぶ（デフォルト）</button>
+                    <button id="user_rating_count_searches" class="btn btn-outline-secondary">
+                        レビュー人数が多い店から選ぶ
+                    </button>
+                    <button id="niche" class="btn btn-outline-success">ニッチなお店から選ぶ（開発中）</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
+<!-- 料理の種類を選択するモーダル -->
+<div class="modal fade" id="cuisineModal" tabindex="-1" aria-labelledby="cuisineModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cuisineModalLabel">料理を選択</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>表示する料理の種類を選んでください</p>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-dark cuisine-option" data-cuisine="restaurant">指定なし</button>
+                    <button class="btn btn-outline-dark cuisine-option" data-cuisine="chinese_restaurant">中華料理</button>
+                    <button class="btn btn-outline-dark cuisine-option" data-cuisine="french_restaurant">フランス料理</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script type="module">
     import {createMarkers} from "{% static 'polls/searches_with_geolocation.js' %}";
@@ -127,7 +150,7 @@
         //////////////////////////////////////////////////////
         const nextButton = document.createElement("button");
         nextButton.innerHTML = `<i class="bi bi-map-fill"></i>　地図を選択`;
-        nextButton.classList.add("btn", "btn-primary", "custom-map-control-button");
+        nextButton.classList.add("btn", "btn-light", "custom-map-control-button");
         nextButton.style.margin = "10px"
         nextButton.style.padding = "10px 20px";
         nextButton.style.borderRadius = "30px";
@@ -160,6 +183,37 @@
             const geolocation = center.lat() + "," + center.lng();
             location.href = "/polls/niche/" + geolocation + "/";
         });
+        // 「料理の種類を選択」ボタンを作成
+        const cuisineButton = document.createElement("button");
+        cuisineButton.innerHTML = `<i class="bi bi-egg-fried"></i>　料理を選択`;
+        cuisineButton.classList.add("btn", "btn-light", "custom-map-control-button");
+        cuisineButton.style.margin = "10px";
+        cuisineButton.style.padding = "10px 20px";
+        cuisineButton.style.borderRadius = "30px";
+        cuisineButton.style.fontSize = "16px";
+
+        // 「地図を選択」ボタンの右に配置
+        const leftBottomControls = map.controls[google.maps.ControlPosition.LEFT_BOTTOM];
+        leftBottomControls.push(cuisineButton);
+
+        // モーダルを表示するクリックイベントを設定
+        cuisineButton.addEventListener("click", () => {
+            const cuisineModal = new bootstrap.Modal(document.getElementById("cuisineModal"));
+            cuisineModal.show();
+        });
+
+        // モーダル内の料理選択ボタンにイベントを追加
+        document.querySelectorAll('.cuisine-option').forEach(button => {
+            button.addEventListener('click', () => {
+                const cuisine = button.getAttribute('data-cuisine');
+                const center = map.getCenter();
+                const geolocation = `${center.lat()},${center.lng()}`;
+
+                // 選択された料理の種類でリダイレクト
+                location.href = `/polls/searches/${geolocation}/${cuisine}/`;
+            });
+        });
+
     }
 
     initMap();
