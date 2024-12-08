@@ -25,11 +25,15 @@
             <div class="modal-body">
                 <p>表示するお店の基準を選んでください</p>
                 <div class="d-grid gap-2">
-                    <button id="searches" class="btn btn-outline-primary">高評価のお店から選ぶ（デフォルト）</button>
-                    <button id="user_rating_count_searches" class="btn btn-outline-secondary">
+                    <button class="btn btn-outline-primary map-option" data-map-type="searches">
+                        高評価のお店から選ぶ（デフォルト）
+                    </button>
+                    <button class="btn btn-outline-secondary map-option" data-map-type="user_rating_count_searches">
                         レビュー人数が多い店から選ぶ
                     </button>
-                    <button id="niche" class="btn btn-outline-success">ニッチなお店から選ぶ（開発中）</button>
+                    <button class="btn btn-outline-success map-option" data-map-type="niche">
+                        ニッチなお店から選ぶ（開発中）
+                    </button>
                 </div>
             </div>
         </div>
@@ -47,8 +51,10 @@
                 <p>表示する料理の種類を選んでください</p>
                 <div class="d-grid gap-2">
                     <button class="btn btn-outline-dark cuisine-option" data-cuisine="restaurant">指定なし</button>
-                    <button class="btn btn-outline-dark cuisine-option" data-cuisine="chinese_restaurant">中華料理</button>
-                    <button class="btn btn-outline-dark cuisine-option" data-cuisine="french_restaurant">フランス料理</button>
+                    <button class="btn btn-outline-dark cuisine-option" data-cuisine="chinese_restaurant">中華料理
+                    </button>
+                    <button class="btn btn-outline-dark cuisine-option" data-cuisine="french_restaurant">フランス料理
+                    </button>
                 </div>
             </div>
         </div>
@@ -163,27 +169,21 @@
             mapModal.show();
         });
 
-        // モーダル内のsearchesボタンをクリックしたときのイベント
-        document.getElementById("searches").addEventListener("click", () => {
-            const center = map.getCenter();
-            const geolocation = center.lat() + "," + center.lng();
-            location.href = "/polls/searches/" + geolocation + "/{{ cuisine }}/";
+        // モーダル内の地図選択ボタンにイベントを追加
+        document.querySelectorAll('.map-option').forEach(button => {
+            button.addEventListener('click', () => {
+                const mapType = button.getAttribute('data-map-type');
+                const center = map.getCenter();
+                const geolocation = `${center.lat()},${center.lng()}`;
+
+                // 選択された地図タイプでリダイレクト
+                location.href = `/polls/${mapType}/${geolocation}/{{ cuisine }}/`;
+            });
         });
 
-        // モーダル内のuser_rating_count_searchesボタンをクリックしたときのイベント
-        document.getElementById("user_rating_count_searches").addEventListener("click", () => {
-            const center = map.getCenter();
-            const geolocation = center.lat() + "," + center.lng();
-            location.href = "/polls/user_rating_count_searches/" + geolocation + "/";
-        });
-
-        // モーダル内のnicheボタンをクリックしたときのイベント
-        document.getElementById("niche").addEventListener("click", () => {
-            const center = map.getCenter();
-            const geolocation = center.lat() + "," + center.lng();
-            location.href = "/polls/niche/" + geolocation + "/";
-        });
-        // 「料理の種類を選択」ボタンを作成
+        //////////////////////////////////////////////////////
+        // 料理の種類を選ぶボタンを追加
+        //////////////////////////////////////////////////////
         const cuisineButton = document.createElement("button");
         cuisineButton.innerHTML = `<i class="bi bi-egg-fried"></i>　料理を選択`;
         cuisineButton.classList.add("btn", "btn-light", "custom-map-control-button");
