@@ -99,20 +99,20 @@ def popular_searches(request, query_geolocation, cuisine):
 
 
 @login_required
-def user_rating_count_searches_with_geolocation(request, query_geolocation, cuisine):
+def user_rating_count_searches(request, query_geolocation, cuisine):
     # 文字列をカンマで分割してfloatに変換
     geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1])}
     restaurants = nearby_search_api(geolocation, cuisine)['places']
     top_rating_count_searches_restaurants = sorted(restaurants, key=lambda x: x['userRatingCount'], reverse=True)[:3]
     saved_restaurants = saving_restaurants(top_rating_count_searches_restaurants)
     print(saved_restaurants)
-    template = loader.get_template('polls/user_rating_count_searches_with_geolocation.html')
+    template = loader.get_template('polls/user_rating_count_searches.html')
     context = {
         'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
         'geolocation': geolocation,
         'cuisine': cuisine,
         'saved_restaurants': saved_restaurants,
-        'path': 'user_rating_count_searches_with_geolocation',
+        'path': 'user_rating_count_searches',
         'color': 'secondary'
     }
     return HttpResponse(template.render(context, request))

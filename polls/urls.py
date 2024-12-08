@@ -12,5 +12,5 @@ urlpatterns = [
     # searches/は任意でカンマ区切りの座標を受け取る
     path('popular_searches/<str:query_geolocation>/<str:cuisine>/', views.popular_searches, name='popular_searches'),
     path('searches/', views.searches, name='searches'),
-    path('user_rating_count_searches/<str:query_geolocation>/<str:cuisine>/', views.user_rating_count_searches_with_geolocation, name='user_rating_count_searches_with_geolocation'),
+    path('user_rating_count_searches/<str:query_geolocation>/<str:cuisine>/', views.user_rating_count_searches, name='user_rating_count_searches'),
 ]
