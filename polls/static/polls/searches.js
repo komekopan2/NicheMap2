@@ -39,7 +39,7 @@ function initializeMap() {
     setTimeout(() => {
         const center = map.getCenter();
         let geolocation = center.lat() + "," + center.lng();
-        window.location.href = "/polls/searches/" + geolocation + "/restaurant/";
+        window.location.href = "/polls/popular_searches/" + geolocation + "/restaurant/";
     }, 1000);
 }
 
