@@ -14,7 +14,7 @@
 <body>
 <div id="map"></div>
 
-<!-- Bootstrap モーダル -->
+<!-- 地図の種類を選択するモーダル -->
 <div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -191,10 +191,7 @@
         cuisineButton.style.padding = "10px 20px";
         cuisineButton.style.borderRadius = "30px";
         cuisineButton.style.fontSize = "16px";
-
-        // 「地図を選択」ボタンの右に配置
-        const leftBottomControls = map.controls[google.maps.ControlPosition.LEFT_BOTTOM];
-        leftBottomControls.push(cuisineButton);
+        map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(cuisineButton);
 
         // モーダルを表示するクリックイベントを設定
         cuisineButton.addEventListener("click", () => {
