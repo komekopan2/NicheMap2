@@ -111,7 +111,12 @@ def user_rating_count_searches(request, query_geolocation, cuisine):
     except KeyError:
         saved_restaurants = []
     else:
-        top_searches_restaurants = sorted(restaurants, key=lambda x: x['userRatingCount'], reverse=True)[:3]
+        top_searches_restaurants = sorted(
+            restaurants,
+            key=lambda x: x.get('userRatingCount', 0),
+            reverse=True
+        )[:3]
+
         saved_restaurants = saving_restaurants(top_searches_restaurants)
     print(saved_restaurants)
     template = loader.get_template('polls/user_rating_count_searches.html')
