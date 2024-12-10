@@ -1,4 +1,4 @@
-export function createMarkers(map, restaurants, infoWindow) {
+export function createMarkers(map, restaurants, infoWindow, color) {
     let beachFlagImg;
     const markers = []; // マーカーを保存する配列
     const intersectionObserver = new IntersectionObserver((entries) => {
@@ -134,7 +134,7 @@ export function createMarkers(map, restaurants, infoWindow) {
             placeUrlElement.href = google_maps_uri;
             placeUrlElement.target = "_blank";
             placeUrlElement.textContent = "Google Mapsで見る";
-            placeUrlElement.classList.add("btn", "btn-secondary", "btn-sm", "mt-2");  // スマホ向けに小さいボタンにする
+            placeUrlElement.classList.add("btn", `btn-${color}`, "btn-sm", "mt-2");  // スマホ向けに小さいボタンにする
             cardBody.appendChild(placeUrlElement);
 
             // カード本文を詳細コンテンツに追加
