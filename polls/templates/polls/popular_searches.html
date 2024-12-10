@@ -87,7 +87,12 @@
             });
         {% endfor %}
 
-        createMarkers(map, restaurants, infoWindow);
+        // 保存されたレストラン情報が0件の場合はアラートを表示
+        if (restaurants.length === 0) {
+            alert("この付近にはレストランないかも...(ノω≤。)");
+        } else {
+            createMarkers(map, restaurants, infoWindow);
+        }
 
         //////////////////////////////////////////////////////
         // この付近を検索ボタンを追加
