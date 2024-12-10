@@ -1,0 +1,89 @@
+<!-- 地図の種類を選択するモーダル -->
+<div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mapModalLabel">地図を選択</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>表示するお店の基準を選んでください</p>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-primary map-option" data-map-type="popular_searches">
+                        高評価のお店から選ぶ（デフォルト）
+                    </button>
+                    <button class="btn btn-outline-secondary map-option" data-map-type="user_rating_count_searches">
+                        レビュー人数が多い店から選ぶ
+                    </button>
+                    <button class="btn btn-outline-success map-option" data-map-type="niche">
+                        ニッチなお店から選ぶ（開発中）
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 料理の種類を選択するモーダル -->
+<div class="modal fade" id="cuisineModal" tabindex="-1" aria-labelledby="cuisineModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="cuisineModalLabel">
+                    <i class="fa-solid fa-utensils me-2"></i>料理を選択
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted mb-4">表示する料理の種類を選んでください</p>
+                <div class="d-grid gap-3">
+                    <button class="btn btn-light cuisine-option d-flex align-items-center" data-cuisine="restaurant">
+                        <i class="fa-solid fa-house me-3 text-success"></i>指定なし
+                    </button>
+                    <button class="btn btn-light cuisine-option d-flex align-items-center"
+                            data-cuisine="ramen_restaurant">
+                        <i class="fa-solid fa-trophy me-3 text-primary"></i>ラーメン
+                    </button>
+                    <button class="btn btn-light cuisine-option d-flex align-items-center" data-cuisine="fast_food_restaurant">
+                        <i class="fa-solid fa-hamburger me-3 text-warning"></i>ファストフード
+                    </button>
+                    <button class="btn btn-light cuisine-option d-flex align-items-center"
+                            data-cuisine="chinese_restaurant">
+                        <i class="fa-solid fa-fire me-3 text-danger"></i>中華料理
+                    </button>
+                    <button class="btn btn-light cuisine-option d-flex align-items-center"
+                            data-cuisine="french_restaurant">
+                        <i class="fa-solid fa-wine-glass me-3 text-success"></i>フランス料理
+                    </button>
+                    <button class="btn btn-light cuisine-option d-flex align-items-center"
+                            data-cuisine="japanese_restaurant">
+                        <i class="fa-solid fa-lemon me-3 text-warning"></i>日本料理
+                    </button>
+                    <button class="btn btn-light cuisine-option d-flex align-items-center"
+                            data-cuisine="italian_restaurant">
+                        <i class="fa-solid fa-pizza-slice me-3 text-danger"></i>イタリア料理
+                    </button>
+                    <button class="btn btn-light cuisine-option d-flex align-items-center"
+                            data-cuisine="sushi_restaurant">
+                        <i class="fa-solid fa-fish me-3 text-primary"></i>寿司
+                    </button>
+                    <button class="btn btn-light cuisine-option d-flex align-items-center" data-cuisine="steak_house">
+                        <i class="fa-solid fa-drumstick-bite me-3 text-danger"></i>ステーキ
+                    </button>
+                    <button class="btn btn-light cuisine-option d-flex align-items-center" data-cuisine="bakery">
+                        <i class="fa-solid fa-bread-slice me-3 text-warning"></i>ベーカリー
+                    </button>
+                    <button class="btn btn-light cuisine-option d-flex align-items-center" data-cuisine="cafe">
+                        <i class="fa-solid fa-coffee me-3 text-success"></i>カフェ
+                    </button>
+                    <button class="btn btn-light cuisine-option d-flex align-items-center" data-cuisine="bar">
+                        <i class="fa-solid fa-glass-martini me-3 text-danger"></i>バー
+                    </button>
+                    <button class="btn btn-light cuisine-option d-flex align-items-center" data-cuisine="meal_takeaway">
+                        <i class="fa-solid fa-box me-3 text-primary"></i>テイクアウト
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

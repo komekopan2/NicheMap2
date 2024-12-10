@@ -40,7 +40,7 @@ def vote(request, question_id):
 @login_required
 def profile(request):
     # 現在のログインユーザーのGoogleアカウント情報を取得
-    template=loader.get_template('polls/profile.html')
+    template = loader.get_template('polls/profile.html')
     try:
         google_account = SocialAccount.objects.get(user=request.user, provider='google')
         profile_data = google_account.extra_data
@@ -79,34 +79,53 @@ def searches(request):
 
 
 @login_required
-def searches_with_geolocation(request, query_geolocation):
+def popular_searches(request, query_geolocation, cuisine):
     # 文字列をカンマで分割してfloatに変換
     geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1])}
-    restaurants = nearby_search_api(geolocation)['places']
-    top_searches_restaurants = restaurants[:3]
-    saved_restaurants = saving_restaurants(top_searches_restaurants)
+    try:
+        restaurants = nearby_search_api(geolocation, cuisine)['places']
+    except KeyError:
+        saved_restaurants = []
+    else:
+        top_searches_restaurants = restaurants[:3]
+        saved_restaurants = saving_restaurants(top_searches_restaurants)
     print(saved_restaurants)
-    template = loader.get_template('polls/searches_with_geolocation.html')
+    template = loader.get_template('polls/popular_searches.html')
     context = {
         'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
         'geolocation': geolocation,
+        'cuisine': cuisine,
         'saved_restaurants': saved_restaurants,
+        'path': 'popular_searches',
+        'color': 'primary'
     }
     return HttpResponse(template.render(context, request))
 
 
 @login_required
-def user_rating_count_searches_with_geolocation(request, query_geolocation):
+def user_rating_count_searches(request, query_geolocation, cuisine):
     # 文字列をカンマで分割してfloatに変換
     geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1])}
-    restaurants = nearby_search_api(geolocation)['places']
-    top_rating_count_searches_restaurants = sorted(restaurants, key=lambda x: x['userRatingCount'], reverse=True)[:3]
-    saved_restaurants = saving_restaurants(top_rating_count_searches_restaurants)
+    try:
+        restaurants = nearby_search_api(geolocation, cuisine)['places']
+    except KeyError:
+        saved_restaurants = []
+    else:
+        top_searches_restaurants = sorted(
+            restaurants,
+            key=lambda x: x.get('userRatingCount', 0),
+            reverse=True
+        )[:3]
+
+        saved_restaurants = saving_restaurants(top_searches_restaurants)
     print(saved_restaurants)
-    template = loader.get_template('polls/user_rating_count_searches_with_geolocation.html')
+    template = loader.get_template('polls/user_rating_count_searches.html')
     context = {
         'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
         'geolocation': geolocation,
+        'cuisine': cuisine,
         'saved_restaurants': saved_restaurants,
+        'path': 'user_rating_count_searches',
+        'color': 'secondary'
     }
     return HttpResponse(template.render(context, request))
