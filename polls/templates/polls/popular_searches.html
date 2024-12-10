@@ -53,22 +53,11 @@
                     });
 
                     // マーカーのカスタムアイコンを設定
-                    userMarker.content.classList.add("custom-marker");
-                    userMarker.content.style.width = "20px";
-                    userMarker.content.style.height = "20px";
-                    userMarker.content.style.backgroundColor = "white"; // 背景を白に設定
-                    userMarker.content.style.borderRadius = "50%";
-                    userMarker.content.style.border = "2px solid #0d6efd"; // text-primaryカラーに一致する青色
-                    userMarker.content.style.boxShadow = "0px 2px 6px rgba(0,0,0,0.3)";
+                    userMarker.content.classList.add("user-marker");
 
                     // 中央にBootstrapアイコンを追加
                     const icon = document.createElement("i");
-                    icon.classList.add("bi", "bi-circle-fill", "text-{{ color }}");
-                    icon.style.fontSize = "12px"; // アイコンのサイズを調整
-                    icon.style.position = "absolute";
-                    icon.style.top = "50%";
-                    icon.style.left = "50%";
-                    icon.style.transform = "translate(-50%, -50%)";
+                    icon.classList.add("bi", "bi-circle-fill", "text-{{ color }}", "user-icon");
                     userMarker.content.appendChild(icon);
                 },
                 () => {
@@ -83,15 +72,7 @@
         //////////////////////////////////////////////////////
         const goToCurrentLocationButton = document.createElement("button");
         goToCurrentLocationButton.innerHTML = `<i class="bi bi-cursor-fill text-{{ color }}"></i>`;
-        goToCurrentLocationButton.classList.add("btn", "btn-primary", "custom-map-control-button");
-        goToCurrentLocationButton.style.margin = "10px";
-        goToCurrentLocationButton.style.padding = "10px";
-        goToCurrentLocationButton.style.borderRadius = "50%"; // ボタンを円形にする
-        goToCurrentLocationButton.style.width = "40px";
-        goToCurrentLocationButton.style.height = "40px";
-        goToCurrentLocationButton.style.boxShadow = "0px 2px 6px rgba(0,0,0,0.3)";
-        goToCurrentLocationButton.style.backgroundColor = "white"; // 背景を白に設定
-        goToCurrentLocationButton.style.border = "none"; // ボーダーを消す
+        goToCurrentLocationButton.classList.add("btn", "btn-primary", "go-to-current-location-button");
         map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(goToCurrentLocationButton);
 
         goToCurrentLocationButton.addEventListener("click", () => {
@@ -146,11 +127,7 @@
         //////////////////////////////////////////////////////
         let locationButton = document.createElement("button");
         locationButton.textContent = "この付近を検索";
-        locationButton.classList.add("btn", "btn-{{ color }}", "custom-map-control-button");
-        locationButton.style.margin = "60px";  // 余白を追加
-        locationButton.style.padding = "10px 20px";  // パディングを追加
-        locationButton.style.borderRadius = "30px";  // ボーダーの丸みを追加
-        locationButton.style.fontSize = "16px";  // 文字サイズを調整
+        locationButton.classList.add("btn", "btn-{{ color }}", "location-button");
         map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
         locationButton.addEventListener("click", () => {
             {#中心座標の取得#}
@@ -164,11 +141,7 @@
         //////////////////////////////////////////////////////
         const nextButton = document.createElement("button");
         nextButton.innerHTML = `<i class="bi bi-map-fill"></i>　地図を選択`;
-        nextButton.classList.add("btn", "btn-light", "custom-map-control-button");
-        nextButton.style.margin = "10px"
-        nextButton.style.padding = "10px 20px";
-        nextButton.style.borderRadius = "30px";
-        nextButton.style.fontSize = "16px";
+        nextButton.classList.add("btn", "btn-light", "next-button");
         map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(nextButton);
 
         // Bootstrap モーダルを表示するためのクリックイベント
@@ -194,11 +167,7 @@
         //////////////////////////////////////////////////////
         const cuisineButton = document.createElement("button");
         cuisineButton.innerHTML = `<i class="bi bi-egg-fried"></i>　料理を選択`;
-        cuisineButton.classList.add("btn", "btn-light", "custom-map-control-button");
-        cuisineButton.style.margin = "10px";
-        cuisineButton.style.padding = "10px 20px";
-        cuisineButton.style.borderRadius = "30px";
-        cuisineButton.style.fontSize = "16px";
+        cuisineButton.classList.add("btn", "btn-light", "cuisine-button");
         map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(cuisineButton);
 
         // モーダルを表示するクリックイベントを設定

@@ -35,6 +35,7 @@ export function createMarkers(map, restaurants, infoWindow) {
             content: beachFlagImg,
         });
         markers.push(marker); // マーカーを配列に追加
+
         //////////////////////////////////////////////////////
         // マーカーのアニメーションを設定
         //////////////////////////////////////////////////////
