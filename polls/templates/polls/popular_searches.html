@@ -56,9 +56,9 @@
                     userMarker.content.classList.add("user-marker");
 
                     // 中央にBootstrapアイコンを追加
-                    const icon = document.createElement("i");
-                    icon.classList.add("bi", "bi-circle-fill", "text-{{ color }}", "user-icon");
-                    userMarker.content.appendChild(icon);
+                    const userIcon = document.createElement("i");
+                    userIcon.classList.add("bi", "bi-circle-fill", "text-{{ color }}", "user-icon");
+                    userMarker.content.appendChild(userIcon);
                 },
                 () => {
                     console.error("現在地が取得できませんでした。");
@@ -125,11 +125,11 @@
         //////////////////////////////////////////////////////
         // この付近を検索ボタンを追加
         //////////////////////////////////////////////////////
-        let locationButton = document.createElement("button");
-        locationButton.textContent = "この付近を検索";
-        locationButton.classList.add("btn", "btn-{{ color }}", "location-button");
-        map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
-        locationButton.addEventListener("click", () => {
+        let searchNearbyButton = document.createElement("button");
+        searchNearbyButton.textContent = "この付近を検索";
+        searchNearbyButton.classList.add("btn", "btn-{{ color }}", "search-nearby-button");
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(searchNearbyButton);
+        searchNearbyButton.addEventListener("click", () => {
             {#中心座標の取得#}
             const center = map.getCenter();
             let geolocation = center.lat() + "," + center.lng();
@@ -139,13 +139,13 @@
         //////////////////////////////////////////////////////
         // 地図を選ぶボタンを追加
         //////////////////////////////////////////////////////
-        const nextButton = document.createElement("button");
-        nextButton.innerHTML = `<i class="bi bi-map-fill"></i>　地図を選択`;
-        nextButton.classList.add("btn", "btn-light", "next-button");
-        map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(nextButton);
+        const selectMapButton = document.createElement("button");
+        selectMapButton.innerHTML = `<i class="bi bi-map-fill"></i>　地図を選択`;
+        selectMapButton.classList.add("btn", "btn-light", "select-map-button");
+        map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(selectMapButton);
 
         // Bootstrap モーダルを表示するためのクリックイベント
-        nextButton.addEventListener("click", () => {
+        selectMapButton.addEventListener("click", () => {
             const mapModal = new bootstrap.Modal(document.getElementById("mapModal"));
             mapModal.show();
         });

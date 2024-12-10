@@ -121,7 +121,7 @@ body {
     font-size: 20px; /* アイコンのサイズ調整 */
 }
 
-.location-button {
+.search-nearby-button {
     margin: 60px; /* 余白を追加 */
     padding: 10px 20px; /* パディングを追加 */
     border-radius: 30px; /* ボーダーの丸みを追加 */
@@ -132,7 +132,7 @@ body {
     white-space: nowrap;
 }
 
-.next-button {
+.select-map-button {
     margin: 10px; /* 余白を追加 */
     padding: 10px 20px; /* パディングを追加 */
     border-radius: 30px; /* ボーダーの丸みを追加 */
