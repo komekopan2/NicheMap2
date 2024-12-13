@@ -7,7 +7,7 @@ from django.conf import settings
 def nearby_search_api(geolocation, cuisine):
     """
     Google Places APIを使って近くのレストランを検索する
-    :param geolocation: dict
+    :param geolocation: {'lat': float, 'lng': float, 'zoom': float}
     :param cuisine: str
     :return: dict
     """

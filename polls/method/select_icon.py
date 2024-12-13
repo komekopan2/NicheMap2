@@ -1,4 +1,9 @@
 def select_path_icon(path):
+    """
+    pathに応じたアイコンを返す
+    :param path: str
+    :return: str
+    """
     path_icons = {
         "popular_searches": 'bi bi-star-fill me-3 text-primary',
         "user_rating_count_searches": 'bi bi-people-fill me-3 text-secondary',
@@ -8,7 +13,11 @@ def select_path_icon(path):
     return path_icons[path]
 
 def select_cuisine_icon(cuisine):
-    # 料理の種類に応じたアイコンを設定
+    """
+    cuisineに応じたアイコンを返す
+    :param cuisine: str
+    :return: str
+    """
     cuisine_icons = {
         "restaurant": 'fa-solid fa-house me-3 text-success',
         "ramen_restaurant": 'fa-solid fa-trophy me-3 text-primary',
