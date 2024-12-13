@@ -1,7 +1,7 @@
 let map, infoWindow, pos;
 
 async function initMap() {
-    const { InfoWindow, Map } = await google.maps.importLibrary("maps");
+    const {InfoWindow, Map} = await google.maps.importLibrary("maps");
     infoWindow = new InfoWindow();
 
     // 現在地の取得
@@ -16,13 +16,13 @@ async function initMap() {
             },
             () => {
                 console.error("現在地が取得できませんでした。");
-                pos = { lat: 35.16647380016069, lng: 136.90548000133316 };
+                pos = {lat: 35.16647380016069, lng: 136.90548000133316};
                 initializeMap();  // デフォルト位置でマップを初期化
             }
         );
     } else {
         console.error("このブラウザではGeolocation APIがサポートされていません。");
-        pos = { lat: 35.16647380016069, lng: 136.90548000133316 };
+        pos = {lat: 35.16647380016069, lng: 136.90548000133316};
         initializeMap();  // デフォルト位置でマップを初期化
     }
 }
@@ -38,7 +38,7 @@ function initializeMap() {
     // 1秒後にリダイレクト
     setTimeout(() => {
         const center = map.getCenter();
-        let geolocation = center.lat() + "," + center.lng();
+        let geolocation = center.lat() + "," + center.lng() + ",15";
         window.location.href = "/polls/popular_searches/" + geolocation + "/restaurant/";
     }, 1000);
 }
