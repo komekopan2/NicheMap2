@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from .method.nearby_search_api import nearby_search_api
 from .method.saving_restaurants import saving_restaurants
+from .method.select_icon import select_path_icon, select_cuisine_icon
 from allauth.socialaccount.models import SocialAccount
 
 
@@ -90,14 +91,19 @@ def popular_searches(request, query_geolocation, cuisine):
         top_searches_restaurants = restaurants[:3]
         saved_restaurants = saving_restaurants(top_searches_restaurants)
     print(saved_restaurants)
+    path = 'popular_searches'
+    path_icon = select_path_icon(path)
+    cuisine_icon = select_cuisine_icon(cuisine)
     template = loader.get_template('polls/popular_searches.html')
     context = {
         'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
         'geolocation': geolocation,
         'cuisine': cuisine,
         'saved_restaurants': saved_restaurants,
-        'path': 'popular_searches',
-        'color': 'primary'
+        'path': path,
+        'color': 'primary',
+        'path_icon': path_icon,
+        'cuisine_icon': cuisine_icon,
     }
     return HttpResponse(template.render(context, request))
 
@@ -119,13 +125,18 @@ def user_rating_count_searches(request, query_geolocation, cuisine):
 
         saved_restaurants = saving_restaurants(top_searches_restaurants)
     print(saved_restaurants)
+    path = 'user_rating_count_searches'
+    path_icon = select_path_icon(path)
+    cuisine_icon = select_cuisine_icon(cuisine)
     template = loader.get_template('polls/user_rating_count_searches.html')
     context = {
         'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
         'geolocation': geolocation,
         'cuisine': cuisine,
         'saved_restaurants': saved_restaurants,
-        'path': 'user_rating_count_searches',
-        'color': 'secondary'
+        'path': path,
+        'color': 'secondary',
+        'path_icon': path_icon,
+        'cuisine_icon': cuisine_icon,
     }
     return HttpResponse(template.render(context, request))
