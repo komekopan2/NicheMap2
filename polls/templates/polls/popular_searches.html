@@ -30,7 +30,7 @@
         infoWindow = new InfoWindow();  // InfoWindowを初期化
         map = new Map(document.getElementById("map"), {
             center: {lat: {{ geolocation.lat }}, lng: {{ geolocation.lng }}},
-            zoom: 15,
+            zoom: {{ geolocation.zoom }},
             mapId: "4d7250671e5b361d",
         });
         //////////////////////////////////////////////////////
@@ -84,7 +84,6 @@
                             lng: position.coords.longitude,
                         };
                         map.setCenter(currentLocation);
-                        map.setZoom(15); // 適切なズームレベルに調整
                     },
                     () => {
                         alert("現在地が取得できませんでした。");
@@ -117,7 +116,11 @@
 
         // 保存されたレストラン情報が0件の場合はアラートを表示
         if (restaurants.length === 0) {
-            alert("この付近にはレストランないかも...(ノω≤。)");
+            const text = [
+                "この付近にはレストランがないかも...(ノω≤。)",
+                'ズームを小さくしたり、他の地域で再度検索してみて',
+            ].join('\n');
+            alert(text);
         } else {
             createMarkers(map, restaurants, infoWindow, "{{ color }}");
         }
@@ -132,7 +135,8 @@
         searchNearbyButton.addEventListener("click", () => {
             {#中心座標の取得#}
             const center = map.getCenter();
-            let geolocation = center.lat() + "," + center.lng();
+            const zoom = map.getZoom(); // 現在の縮尺を取得
+            let geolocation = center.lat() + "," + center.lng() + "," + zoom;
             location.href = "/polls/{{ path }}/" + geolocation + "/{{ cuisine }}/";
         });
 
@@ -155,7 +159,8 @@
             button.addEventListener('click', () => {
                 const mapType = button.getAttribute('data-map-type');
                 const center = map.getCenter();
-                const geolocation = `${center.lat()},${center.lng()}`;
+                const zoom = map.getZoom();
+                const geolocation = `${center.lat()},${center.lng()},${zoom}`;
 
                 // 選択された地図タイプでリダイレクト
                 location.href = `/polls/${mapType}/${geolocation}/{{ cuisine }}/`;
@@ -181,7 +186,8 @@
             button.addEventListener('click', () => {
                 const cuisine = button.getAttribute('data-cuisine');
                 const center = map.getCenter();
-                const geolocation = `${center.lat()},${center.lng()}`;
+                const zoom = map.getZoom();
+                const geolocation = `${center.lat()},${center.lng()},${zoom}`;
 
                 // 選択された料理の種類でリダイレクト
                 location.href = `/polls/{{ path }}/${geolocation}/${cuisine}/`;

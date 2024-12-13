@@ -82,7 +82,8 @@ def searches(request):
 @login_required
 def popular_searches(request, query_geolocation, cuisine):
     # 文字列をカンマで分割してfloatに変換
-    geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1])}
+    geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1]),
+                   'zoom': float(query_geolocation.split(',')[2])}
     try:
         restaurants = nearby_search_api(geolocation, cuisine)['places']
     except KeyError:
@@ -111,7 +112,8 @@ def popular_searches(request, query_geolocation, cuisine):
 @login_required
 def user_rating_count_searches(request, query_geolocation, cuisine):
     # 文字列をカンマで分割してfloatに変換
-    geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1])}
+    geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1]),
+                   'zoom': float(query_geolocation.split(',')[2])}
     try:
         restaurants = nearby_search_api(geolocation, cuisine)['places']
     except KeyError:
