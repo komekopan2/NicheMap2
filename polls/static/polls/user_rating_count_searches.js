@@ -29,6 +29,7 @@ export function createMarkers(map, restaurants, infoWindow, color) {
         beachFlagImg.style.width = "80px"; // 画像のサイズ調整
         beachFlagImg.style.height = "80px"; // 画像のサイズ調整
         beachFlagImg.style.borderRadius = "50%"; // 丸い形にする
+        beachFlagImg.style.boxShadow = "0px 4px 6px rgba(0, 0, 0, 0.3)"; // 影の追加
         const marker = new google.maps.marker.AdvancedMarkerView({
             position,
             map,
