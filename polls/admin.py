@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Question, Choice, Contributor
+from .models import Question, Choice, Contributor, CandidateRestaurant
+
 
 class ChoiceInline(admin.StackedInline):
     model = Choice
@@ -22,5 +23,13 @@ class ContributorAdmin(admin.ModelAdmin):
     list_display = ['user', 'picture_url']
     search_fields = ['user__username']
 
+
+class CandidateRestaurantAdmin(admin.ModelAdmin):
+    list_display = ['name', 'location', 'created_at', 'updated_at']
+    search_fields = ['name']
+    list_filter = ['created_at', 'updated_at']
+
+
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Contributor, ContributorAdmin)
+admin.site.register(CandidateRestaurant, CandidateRestaurantAdmin)

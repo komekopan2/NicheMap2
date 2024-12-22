@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.gis.db import models
+
 
 # Create your models here.
 
@@ -30,3 +32,19 @@ class Contributor(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class CandidateRestaurant(models.Model):
+    name = models.CharField(max_length=255)
+    location = models.PointField(geography=True, srid=4326)
+    # 画像は任意でpolls/static/media/に保存される
+    image = models.ImageField(blank=True, null=True, upload_to='polls/static/media/')
+    # 初めての投稿者のレビューは任意
+    review = models.TextField(blank=True, null=True)
+    # TODO: お店のレビューはRestaurantReviewモデルで管理する
+    # TODO: 営業時間、金額、ニッチ度、料理の種類はRestaurantモデルで管理する
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name

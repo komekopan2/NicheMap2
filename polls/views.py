@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from .method.nearby_search_api import nearby_search_api
+from .method.nearby_search_db import nearby_search_db
 from .method.saving_restaurants import saving_restaurants
 from .method.select_icon import select_path_icon, select_cuisine_icon
 from allauth.socialaccount.models import SocialAccount
@@ -138,6 +139,41 @@ def user_rating_count_searches(request, query_geolocation, cuisine):
         'saved_restaurants': saved_restaurants,
         'path': path,
         'color': 'secondary',
+        'path_icon': path_icon,
+        'cuisine_icon': cuisine_icon,
+    }
+    return HttpResponse(template.render(context, request))
+
+
+@login_required
+def niche_searches(request, query_geolocation, cuisine):
+    # 文字列をカンマで分割してfloatに変換
+    geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1]),
+                   'zoom': float(query_geolocation.split(',')[2])}
+    try:
+        restaurants = nearby_search_db(geolocation, cuisine)['places']
+    except KeyError:
+        saved_restaurants = []
+    else:
+        # restaurantsの中からdistanceが短い順に並べ替えて、最初の3つを取得
+        top_searches_restaurants = sorted(
+            restaurants,
+            key=lambda x: x.get('distance', 0)
+        )[:3]
+
+        saved_restaurants = top_searches_restaurants
+    print(saved_restaurants)
+    path = 'niche_searches'
+    path_icon = select_path_icon(path)
+    cuisine_icon = select_cuisine_icon(cuisine)
+    template = loader.get_template('polls/niche_searches.html')
+    context = {
+        'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
+        'geolocation': geolocation,
+        'cuisine': cuisine,
+        'saved_restaurants': saved_restaurants,
+        'path': path,
+        'color': 'success',
         'path_icon': path_icon,
         'cuisine_icon': cuisine_icon,
     }

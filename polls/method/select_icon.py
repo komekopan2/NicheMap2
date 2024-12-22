@@ -7,7 +7,7 @@ def select_path_icon(path):
     path_icons = {
         "popular_searches": 'bi bi-star-fill me-3 text-primary',
         "user_rating_count_searches": 'bi bi-people-fill me-3 text-secondary',
-        "niche": 'bi bi-map-fill me-3 text-success'
+        "niche_searches": 'bi bi-map-fill me-3 text-success'
     }
 
     return path_icons[path]
