@@ -23,11 +23,11 @@ def nearby_search_db(geolocation, cuisine):
     places = []
     for restaurant in restaurants:
         places.append({
-            'display_name': restaurant.name,
+            'display_name': restaurant.display_name,
             # TODO: urlうまくいくかわかんない
             'google_maps_uri': "https://www.google.com/maps/search/?api=1&query=" + str(restaurant.location.y) + "," + str(restaurant.location.x),
             'location': {'latitude': restaurant.location.y, 'longitude': restaurant.location.x},
-            'photos': restaurant.image.url[20:] if restaurant.image else 'no_image_square.jpg',
+            'photos': restaurant.photos.url[20:] if restaurant.photos else 'no_image_square.jpg',
             'distance': restaurant.distance.m,
             'review': restaurant.review,
             # TODO: saving_restaurantsで保存しているデータと同じ形式にする必要があるかも

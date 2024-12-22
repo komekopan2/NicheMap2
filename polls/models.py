@@ -35,10 +35,10 @@ class Contributor(models.Model):
 
 
 class CandidateRestaurant(models.Model):
-    name = models.CharField(max_length=255)
+    display_name = models.CharField(max_length=255)
     location = models.PointField(geography=True, srid=4326)
     # 画像は任意でpolls/static/media/に保存される
-    image = models.ImageField(blank=True, null=True, upload_to='polls/static/media/')
+    photos = models.ImageField(blank=True, null=True, upload_to='polls/static/media/')
     # 初めての投稿者のレビューは任意
     review = models.TextField(blank=True, null=True)
     # TODO: お店のレビューはRestaurantReviewモデルで管理する
@@ -47,4 +47,4 @@ class CandidateRestaurant(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        return self.display_name

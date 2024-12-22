@@ -25,8 +25,8 @@ class ContributorAdmin(admin.ModelAdmin):
 
 
 class CandidateRestaurantAdmin(admin.ModelAdmin):
-    list_display = ['name', 'location', 'created_at', 'updated_at']
-    search_fields = ['name']
+    list_display = ['display_name', 'location', 'created_at', 'updated_at']
+    search_fields = ['display_name']
     list_filter = ['created_at', 'updated_at']
 
 
