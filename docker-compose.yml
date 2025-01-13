@@ -5,9 +5,6 @@ services:
       dockerfile: containers/postgres/Dockerfile
     ports:
       - "5432:5432"
-    # M1チップでも動くように
-    # Intel Macの場合あってもなくても動く
-    platform: linux/x86_64
     volumes:
       - db_data:/var/lib/postgresql/data
     env_file:

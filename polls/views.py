@@ -155,13 +155,8 @@ def niche_searches(request, query_geolocation, cuisine):
     except KeyError:
         saved_restaurants = []
     else:
-        # restaurantsの中からdistanceが短い順に並べ替えて、最初の3つを取得
-        top_searches_restaurants = sorted(
-            restaurants,
-            key=lambda x: x.get('distance', 0)
-        )[:3]
-
-        saved_restaurants = top_searches_restaurants
+        top_searches_restaurants = restaurants
+        saved_restaurants = saving_restaurants(top_searches_restaurants)
     print(saved_restaurants)
     path = 'niche_searches'
     path_icon = select_path_icon(path)

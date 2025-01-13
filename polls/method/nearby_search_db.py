@@ -1,7 +1,9 @@
+import requests
+from django.conf import settings
 from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Distance
 
-from ..models import CandidateRestaurant
+from ..models import PassedRestaurant
 
 
 def nearby_search_db(geolocation, cuisine):
@@ -14,27 +16,63 @@ def nearby_search_db(geolocation, cuisine):
     # 座標をポイントとして作成
     user_location = Point(geolocation['lng'], geolocation['lat'], srid=4326)
 
-    # ~m以内のお店を
-    restaurants = CandidateRestaurant.objects.annotate(
-        distance=Distance('location', user_location)
-    ).filter(distance__lte=calculate_radius(geolocation['zoom'])).order_by('distance')
+    # PassedRestaurantモデルとCandidateRestaurantモデルを結合
+    # その後、cuisineに一致するものを取得し、~m以内のお店を近い順に3軒取得
+    if cuisine == 'restaurant':
+        restaurants = PassedRestaurant.objects.annotate(
+            distance=Distance('candidate_restaurant__location', user_location)
+        ).filter(distance__lte=calculate_radius(geolocation['zoom'])).order_by('distance')[:3]
+    else:
+        restaurants = PassedRestaurant.objects.filter(primary_type_display_name=cuisine).annotate(
+            distance=Distance('candidate_restaurant__location', user_location)
+        ).filter(distance__lte=calculate_radius(geolocation['zoom'])).order_by('distance')[:3]
 
     # レスポンス用のデータを作成
     places = []
     for restaurant in restaurants:
-        places.append({
-            'display_name': restaurant.display_name,
-            # TODO: urlうまくいくかわかんない
-            'google_maps_uri': "https://www.google.com/maps/search/?api=1&query=" + str(restaurant.location.y) + "," + str(restaurant.location.x),
-            'location': {'latitude': restaurant.location.y, 'longitude': restaurant.location.x},
-            'photos': restaurant.photos.url[20:] if restaurant.photos else 'no_image_square.jpg',
-            'distance': restaurant.distance.m,
-            'review': restaurant.review,
-            # TODO: saving_restaurantsで保存しているデータと同じ形式にする必要があるかも
-        })
-    print(places)
-
+        # places.append(text_search_api(restaurant.display_name, restaurant.location.y, restaurant.location.x))
+        places.append(text_search_api(restaurant.candidate_restaurant.display_name,
+                                       restaurant.candidate_restaurant.location.y,
+                                       restaurant.candidate_restaurant.location.x))
     return {'places': places}
+
+
+def text_search_api(display_name, restaurant_lat, restaurant_lng):
+    """
+    Google Places APIを使ってテキスト検索する
+    :param display_name: str
+    :param restaurant_lat: float
+    :param restaurant_lng: float
+    :return: dict
+    """
+    url = 'https://places.googleapis.com/v1/places:searchText'
+    headers = {'Content-Type': 'application/json',
+               'X-Goog-Api-Key': settings.SERVER_MAPS_API_KEY,
+               'X-Goog-FieldMask': 'places.displayName,places.googleMapsUri,places.location,places.photos,places.primaryTypeDisplayName,places.rating,places.businessStatus,places.userRatingCount'
+               }
+    data = {'textQuery': display_name,
+            'maxResultCount': 1,
+            'languageCode': 'ja',
+            'regionCode': 'JP',
+            "locationBias": {
+                "circle": {
+                    "center": {
+                        "latitude": restaurant_lat,
+                        "longitude": restaurant_lng
+                    },
+                    "radius": 5000.0
+                }
+            }
+            }
+
+    response = requests.post(url, json=data, headers=headers)
+
+    if response.status_code != 200:
+        print(response.status_code)
+        print(response.text)
+        return
+
+    return response.json()['places'][0]
 
 
 def calculate_radius(zoom):
