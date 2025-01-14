@@ -1,7 +1,9 @@
 # Create your views here.
-from django.http import HttpResponse
-from .models import Question
+from django.http import HttpResponse,HttpResponseRedirect
+from django.db.models import F
+from .models import Question, Choice
 from django.template import loader
+from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -30,13 +32,33 @@ def detail(request, question_id):
     return HttpResponse(template.render(context, request))
 
 
-def results(request, question_id):
-    response = "You're looking at the results of question %s."
-    return HttpResponse(response % question_id)
-
-
 def vote(request, question_id):
-    return HttpResponse("You're voting on question %s." % question_id)
+    question = get_object_or_404(Question, pk=question_id)
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST["choice"])
+    except (KeyError, Choice.DoesNotExist):
+        # Redisplay the question voting form.
+        template = loader.get_template("polls/detail.html")
+        context = {
+            "question": question,
+            "error_message": "You didn't select a choice.",
+        }
+        return HttpResponse(template.render(context, request))
+    else:
+        selected_choice.votes = F("votes") + 1
+        selected_choice.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(reverse("results", args=(question.id,)))
+
+def results(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    template=loader.get_template("polls/results.html")
+    context = {
+        "question": question,
+    }
+    return HttpResponse(template.render(context,request))
 
 
 @login_required
