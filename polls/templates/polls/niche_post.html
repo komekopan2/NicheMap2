@@ -1,0 +1,154 @@
+{% load static %}
+<html>
+<head>
+    <title>みっつまっぷ</title>
+    <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=default"></script>
+
+    <!-- FontAwesome CDNを読み込み -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    {#Bootstrap CSS を追加#}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'polls/' %}{{ path }}.css"/>
+    {# スマホ対応のためのviewport設定#}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<div id="map" style="height: 500px;"></div>
+
+<form id="restaurant-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <label for="id_display_name">店名:</label>
+        <input type="text" id="id_display_name" name="display_name" required>
+    </div>
+    <div>
+        <label for="id_photos">写真:</label>
+        <input type="file" id="id_photos" name="photos">
+    </div>
+    <div>
+        <label for="id_review">レビュー:</label>
+        <textarea id="id_review" name="review"></textarea>
+    </div>
+    <!-- 非表示フィールドで座標を保存 -->
+    <input type="hidden" id="id_location_lat" name="location_lat">
+    <input type="hidden" id="id_location_lng" name="location_lng">
+    <button type="submit">保存</button>
+</form>
+
+<script type="module">
+    let map, draggableMarker;
+
+    async function initMap() {
+        const {Map, InfoWindow} = await google.maps.importLibrary("maps");
+        const {AdvancedMarkerView} = await google.maps.importLibrary("marker");
+
+        map = new Map(document.getElementById("map"), {
+            center: {lat: {{ geolocation.lat }}, lng: {{ geolocation.lng }}},
+            zoom: {{ geolocation.zoom }},
+            mapId: "983676dcc6b5eeee",
+        });
+        const draggableMarker = new google.maps.Marker({
+            map,
+            position: {lat: {{ geolocation.lat }}, lng: {{ geolocation.lng }}},
+            draggable: true,
+        });
+        // マーカーをドラッグした際の座標を取得
+        draggableMarker.addListener('dragend', () => {
+            const position = draggableMarker.getPosition();
+            document.getElementById('id_location_lat').value = position.lat();
+            document.getElementById('id_location_lng').value = position.lng();
+        });
+        //////////////////////////////////////////////////////
+        // 現在地の取得とAdvancedMarkerViewでのマーカー表示
+        //////////////////////////////////////////////////////
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const userPosition = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    };
+
+                    // AdvancedMarkerViewを使って現在地マーカーを作成
+                    const userMarker = new AdvancedMarkerView({
+                        position: userPosition,
+                        map: map,
+                        title: "Your Location",
+                        content: document.createElement("div"),
+                    });
+
+                    // マーカーのカスタムアイコンを設定
+                    userMarker.content.classList.add("user-marker");
+
+                    // 中央にBootstrapアイコンを追加
+                    const userIcon = document.createElement("i");
+                    userIcon.classList.add("bi", "bi-circle-fill", "text-{{ color }}", "user-icon");
+                    userMarker.content.appendChild(userIcon);
+                },
+                () => {
+                    console.error("現在地が取得できませんでした。");
+                }
+            );
+        } else {
+            console.error("このブラウザではGeolocation APIがサポートされていません。");
+        }
+        //////////////////////////////////////////////////////
+        // 現在地に移動するボタンを追加
+        //////////////////////////////////////////////////////
+        const goToCurrentLocationButton = document.createElement("button");
+        goToCurrentLocationButton.innerHTML = `<i class="bi bi-cursor-fill text-{{ color }}"></i>`;
+        goToCurrentLocationButton.classList.add("btn", "btn-primary", "go-to-current-location-button");
+        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(goToCurrentLocationButton);
+
+        goToCurrentLocationButton.addEventListener("click", () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const currentLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+                        map.setCenter(currentLocation);
+                    },
+                    () => {
+                        alert("現在地が取得できませんでした。");
+                    }
+                );
+            } else {
+                alert("このブラウザではGeolocation APIがサポートされていません。");
+            }
+        });
+
+    }
+
+    initMap();
+</script>
+
+<script>
+    (g => {
+        var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__",
+            m = document, b = window;
+        b = b[c] || (b[c] = {});
+        var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams,
+            u = () => h || (h = new Promise(async (f, n) => {
+                await (a = m.createElement("script"));
+                e.set("libraries", [...r] + "");
+                for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                e.set("callback", c + ".maps." + q);
+                a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+                d[q] = f;
+                a.onerror = () => h = n(Error(p + " could not load."));
+                a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                m.head.append(a)
+            }));
+        d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
+    })({
+        key: "{{ front_maps_api_key }}", v: "beta"
+    });
+</script>
+<!-- Bootstrap JS 読み込み -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+</body>
+</html>

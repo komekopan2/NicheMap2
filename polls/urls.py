@@ -14,4 +14,5 @@ urlpatterns = [
     path('searches/', views.searches, name='searches'),
     path('user_rating_count_searches/<str:query_geolocation>/<str:cuisine>/', views.user_rating_count_searches, name='user_rating_count_searches'),
     path('niche_searches/<str:query_geolocation>/<str:cuisine>/', views.niche_searches, name='niche_searches'),
+    path('niche_post/<str:query_geolocation>/<str:cuisine>/', views.niche_post, name='niche_post'),
 ]

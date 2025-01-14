@@ -2,6 +2,7 @@
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import F
 from .models import Question, Choice
+from .forms import CandidateRestaurantForm
 from django.template import loader
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
@@ -12,6 +13,7 @@ from .method.nearby_search_db import nearby_search_db
 from .method.saving_restaurants import saving_restaurants
 from .method.select_icon import select_path_icon, select_cuisine_icon
 from allauth.socialaccount.models import SocialAccount
+from django.contrib.gis.geos import Point
 
 
 def index(request):
@@ -195,3 +197,32 @@ def niche_searches(request, query_geolocation, cuisine):
         'cuisine_icon': cuisine_icon,
     }
     return HttpResponse(template.render(context, request))
+
+
+def niche_post(request, query_geolocation, cuisine):
+    if request.method == 'POST':
+        form = CandidateRestaurantForm(request.POST, request.FILES)
+        if form.is_valid():
+            candidate_restaurant = form.save(commit=False)
+            lat = float(request.POST['location_lat'])
+            lng = float(request.POST['location_lng'])
+            candidate_restaurant.location = Point(lng, lat)  # PointFieldに座標をセット
+            candidate_restaurant.user = request.user  # 自動設定
+            candidate_restaurant.save()
+            return HttpResponseRedirect(reverse("niche_searches", args=(query_geolocation, cuisine)))
+    else:
+        # 文字列をカンマで分割してfloatに変換
+        geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1]),
+                       'zoom': float(query_geolocation.split(',')[2])}
+        path = 'niche_post'
+        template = loader.get_template('polls/niche_post.html')
+        form = CandidateRestaurantForm()
+        context = {
+            'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
+            'geolocation': geolocation,
+            'path': path,
+            'color': 'success',
+            'form': form,
+        }
+        return HttpResponse(template.render(context, request))
+
