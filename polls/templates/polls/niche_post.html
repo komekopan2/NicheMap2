@@ -16,24 +16,24 @@
 <body>
 <div id="map" style="height: 500px;"></div>
 
-<form id="restaurant-form" method="post" enctype="multipart/form-data">
+<form id="restaurant-form" method="post" enctype="multipart/form-data" class="container mt-4">
     {% csrf_token %}
-    <div>
-        <label for="id_display_name">店名:</label>
-        <input type="text" id="id_display_name" name="display_name" required>
+    <div class="mb-3">
+        <label for="id_display_name" class="form-label">店名:</label>
+        <input type="text" id="id_display_name" name="display_name" class="form-control" placeholder="例: 米田珈琲店　矢場町店" required>
     </div>
-    <div>
-        <label for="id_photos">写真:</label>
-        <input type="file" id="id_photos" name="photos">
+    <div class="mb-3">
+        <label for="id_photos" class="form-label">写真:</label>
+        <input type="file" id="id_photos" name="photos" class="form-control">
     </div>
-    <div>
-        <label for="id_review">レビュー:</label>
-        <textarea id="id_review" name="review"></textarea>
+    <div class="mb-3">
+        <label for="id_review" class="form-label">レビュー:</label>
+        <textarea id="id_review" name="review" class="form-control" rows="4" placeholder="例: とても美味しかったです！また行きたいです。"></textarea>
     </div>
     <!-- 非表示フィールドで座標を保存 -->
     <input type="hidden" id="id_location_lat" name="location_lat">
     <input type="hidden" id="id_location_lng" name="location_lng">
-    <button type="submit">保存</button>
+    <button type="submit" class="btn btn-{{ color }} w-100">保存</button>
 </form>
 
 <script type="module">
