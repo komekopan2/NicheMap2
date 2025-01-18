@@ -1,7 +1,7 @@
 # Create your views here.
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import F
-from .models import Question, Choice
+from .models import Question, Choice, Contributor
 from .forms import CandidateRestaurantForm
 from django.template import loader
 from django.urls import reverse
@@ -54,13 +54,14 @@ def vote(request, question_id):
         # user hits the Back button.
         return HttpResponseRedirect(reverse("results", args=(question.id,)))
 
+
 def results(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    template=loader.get_template("polls/results.html")
+    template = loader.get_template("polls/results.html")
     context = {
         "question": question,
     }
-    return HttpResponse(template.render(context,request))
+    return HttpResponse(template.render(context, request))
 
 
 @login_required
@@ -199,17 +200,36 @@ def niche_searches(request, query_geolocation, cuisine):
     return HttpResponse(template.render(context, request))
 
 
+@login_required
 def niche_post(request, query_geolocation, cuisine):
     if request.method == 'POST':
         form = CandidateRestaurantForm(request.POST, request.FILES)
-        if form.is_valid():
-            candidate_restaurant = form.save(commit=False)
-            lat = float(request.POST['location_lat'])
-            lng = float(request.POST['location_lng'])
-            candidate_restaurant.location = Point(lng, lat)  # PointFieldに座標をセット
-            candidate_restaurant.user = request.user  # 自動設定
-            candidate_restaurant.save()
+        if not form.is_valid():
+            return HttpResponseRedirect(reverse("niche_post", args=(query_geolocation, cuisine)))
+        candidate_restaurant = form.save(commit=False)
+        lat = float(request.POST['location_lat'])
+        lng = float(request.POST['location_lng'])
+        candidate_restaurant.location = Point(lng, lat)  # PointFieldに座標をセット
+        candidate_restaurant.user = request.user  # 自動設定
+        candidate_restaurant.save()
+
+        # Contributorモデルにユーザー情報があれば何もしない
+        if Contributor.objects.filter(user=request.user).exists():
             return HttpResponseRedirect(reverse("niche_searches", args=(query_geolocation, cuisine)))
+
+        try:
+            google_account = SocialAccount.objects.get(user=request.user, provider='google')
+        except SocialAccount.DoesNotExist:
+            pass
+        else:
+            profile_data = google_account.extra_data
+            picture_url = profile_data.get('picture')
+            # Contributorモデルにユーザー情報を保存
+            contributor = Contributor(user=request.user, picture_url=picture_url)
+            contributor.save()
+        finally:
+            return HttpResponseRedirect(reverse("niche_searches", args=(query_geolocation, cuisine)))
+
     else:
         # 文字列をカンマで分割してfloatに変換
         geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1]),
@@ -225,4 +245,3 @@ def niche_post(request, query_geolocation, cuisine):
             'form': form,
         }
         return HttpResponse(template.render(context, request))
-
