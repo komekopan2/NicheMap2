@@ -19,15 +19,15 @@
 <form id="restaurant-form" method="post" enctype="multipart/form-data" class="container mt-4">
     {% csrf_token %}
     <div class="mb-3">
-        <label for="id_display_name" class="form-label">店名:</label>
+        <label for="id_display_name" class="form-label">店名 <span class="text-danger">(必須)</span></label>
         <input type="text" id="id_display_name" name="display_name" class="form-control" placeholder="例: 米田珈琲店　矢場町店" required>
     </div>
     <div class="mb-3">
-        <label for="id_photos" class="form-label">写真:</label>
+        <label for="id_photos" class="form-label">写真 <span class="text-muted">(任意)</span></label>
         <input type="file" id="id_photos" name="photos" class="form-control">
     </div>
     <div class="mb-3">
-        <label for="id_review" class="form-label">レビュー:</label>
+        <label for="id_review" class="form-label">レビュー <span class="text-muted">(任意)</span></label>
         <textarea id="id_review" name="review" class="form-control" rows="4" placeholder="例: とても美味しかったです！また行きたいです。"></textarea>
     </div>
     <!-- 非表示フィールドで座標を保存 -->
