@@ -95,6 +95,23 @@
         });
 
         //////////////////////////////////////////////////////
+        // お店を投稿ボタンを追加
+        //////////////////////////////////////////////////////
+        const postShopButton = document.createElement("button");
+        postShopButton.innerHTML = `<i class="bi bi-pencil-square text-{{ color }}"></i>`;
+        postShopButton.classList.add("btn", "btn-light", "post-shop-button");
+        map.controls[google.maps.ControlPosition.RIGHT_TOP].push(postShopButton);
+        postShopButton.addEventListener("click", () => {
+            {#中心座標の取得#}
+            const center = map.getCenter();
+            const zoom = map.getZoom(); // 現在の縮尺を取得
+            let geolocation = center.lat() + "," + center.lng() + "," + zoom;
+            location.href = "/polls/niche_post/" + geolocation + "/{{ cuisine }}/";
+        });
+
+
+
+        //////////////////////////////////////////////////////
         // 保存されたレストラン情報を取得してマーカーを作成する
         //////////////////////////////////////////////////////
         let restaurants = [];
