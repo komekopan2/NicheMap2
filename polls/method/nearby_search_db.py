@@ -60,7 +60,7 @@ def text_search_api(display_name, restaurant_lat, restaurant_lng):
                         "latitude": restaurant_lat,
                         "longitude": restaurant_lng
                     },
-                    "radius": 5000.0
+                    "radius": 500.0
                 }
             }
             }
