@@ -1,0 +1,245 @@
+{% load static %}
+<html>
+<head>
+    <title>みっつまっぷ</title>
+    <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=default"></script>
+
+    <!-- FontAwesome CDNを読み込み -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    {#Bootstrap CSS を追加#}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'polls/' %}{{ path }}.css"/>
+    {# スマホ対応のためのviewport設定#}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<div id="map"></div>
+
+{% include "polls/modal.html" %}
+
+<script type="module">
+    import {createMarkers} from "{% static 'polls/' %}{{ path }}.js";
+
+    let map, infoWindow;
+
+    async function initMap() {
+        const {InfoWindow, Map} = await google.maps.importLibrary("maps");
+        const {AdvancedMarkerView} = await google.maps.importLibrary("marker");
+
+        infoWindow = new InfoWindow();  // InfoWindowを初期化
+        map = new Map(document.getElementById("map"), {
+            center: {lat: {{ geolocation.lat }}, lng: {{ geolocation.lng }}},
+            zoom: {{ geolocation.zoom }},
+            mapId: "983676dcc6b5eeee",
+        });
+        //////////////////////////////////////////////////////
+        // 現在地の取得とAdvancedMarkerViewでのマーカー表示
+        //////////////////////////////////////////////////////
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const userPosition = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    };
+
+                    // AdvancedMarkerViewを使って現在地マーカーを作成
+                    const userMarker = new AdvancedMarkerView({
+                        position: userPosition,
+                        map: map,
+                        title: "Your Location",
+                        content: document.createElement("div"),
+                    });
+
+                    // マーカーのカスタムアイコンを設定
+                    userMarker.content.classList.add("user-marker");
+
+                    // 中央にBootstrapアイコンを追加
+                    const userIcon = document.createElement("i");
+                    userIcon.classList.add("bi", "bi-circle-fill", "text-{{ color }}", "user-icon");
+                    userMarker.content.appendChild(userIcon);
+                },
+                () => {
+                    console.error("現在地が取得できませんでした。");
+                }
+            );
+        } else {
+            console.error("このブラウザではGeolocation APIがサポートされていません。");
+        }
+        //////////////////////////////////////////////////////
+        // 現在地に移動するボタンを追加
+        //////////////////////////////////////////////////////
+        const goToCurrentLocationButton = document.createElement("button");
+        goToCurrentLocationButton.innerHTML = `<i class="bi bi-cursor-fill text-{{ color }}"></i>`;
+        goToCurrentLocationButton.classList.add("btn", "btn-primary", "go-to-current-location-button");
+        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(goToCurrentLocationButton);
+
+        goToCurrentLocationButton.addEventListener("click", () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const currentLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+                        map.setCenter(currentLocation);
+                    },
+                    () => {
+                        alert("現在地が取得できませんでした。");
+                    }
+                );
+            } else {
+                alert("このブラウザではGeolocation APIがサポートされていません。");
+            }
+        });
+
+        //////////////////////////////////////////////////////
+        // お店を投稿ボタンを追加
+        //////////////////////////////////////////////////////
+        const postShopButton = document.createElement("button");
+        postShopButton.innerHTML = `<i class="bi bi-pencil-square text-{{ color }}"></i>`;
+        postShopButton.classList.add("btn", "btn-light", "post-shop-button");
+        map.controls[google.maps.ControlPosition.RIGHT_TOP].push(postShopButton);
+        postShopButton.addEventListener("click", () => {
+            {#中心座標の取得#}
+            const center = map.getCenter();
+            const zoom = map.getZoom(); // 現在の縮尺を取得
+            let geolocation = center.lat() + "," + center.lng() + "," + zoom;
+            location.href = "/polls/niche_post/" + geolocation + "/{{ cuisine }}/";
+        });
+
+
+
+        //////////////////////////////////////////////////////
+        // 保存されたレストラン情報を取得してマーカーを作成する
+        //////////////////////////////////////////////////////
+        let restaurants = [];
+        {% for saved_restaurant in saved_restaurants %}
+            restaurants.push({
+                position: {
+                    lat: {{ saved_restaurant.location.latitude }},
+                    lng: {{ saved_restaurant.location.longitude }}
+                },
+                title: "{{ saved_restaurant.display_name }}",
+                google_maps_uri: "{{ saved_restaurant.google_maps_uri }}",
+                primary_type_display_name: "{{ saved_restaurant.primary_type_display_name }}",
+                rating: "{{ saved_restaurant.rating }}",
+                business_status: "{{ saved_restaurant.business_status }}",
+                user_rating_count: "{{ saved_restaurant.user_rating_count }}",
+                beach_flag_img_src: "{% static 'media/' %}{{ saved_restaurant.photos }}"
+            });
+        {% endfor %}
+
+        // 保存されたレストラン情報が0件の場合はアラートを表示
+        if (restaurants.length === 0) {
+            const text = [
+                "この付近にはレストランがないかも...(ノω≤。)",
+                'ズームを小さくしたり、他の地域で再度検索してみて',
+            ].join('\n');
+            alert(text);
+        } else {
+            createMarkers(map, restaurants, infoWindow, "{{ color }}");
+        }
+
+        //////////////////////////////////////////////////////
+        // この付近を検索ボタンを追加
+        //////////////////////////////////////////////////////
+        let searchNearbyButton = document.createElement("button");
+        searchNearbyButton.textContent = "この付近を検索";
+        searchNearbyButton.classList.add("btn", "btn-{{ color }}", "search-nearby-button");
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(searchNearbyButton);
+        searchNearbyButton.addEventListener("click", () => {
+            {#中心座標の取得#}
+            const center = map.getCenter();
+            const zoom = map.getZoom(); // 現在の縮尺を取得
+            let geolocation = center.lat() + "," + center.lng() + "," + zoom;
+            location.href = "/polls/{{ path }}/" + geolocation + "/{{ cuisine }}/";
+        });
+
+        //////////////////////////////////////////////////////
+        // 地図を選ぶボタンを追加
+        //////////////////////////////////////////////////////
+        const selectMapButton = document.createElement("button");
+        selectMapButton.innerHTML = `<i class="{{ path_icon }}"></i>地図を選択`;
+        selectMapButton.classList.add("btn", "btn-light", "select-map-button");
+        map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(selectMapButton);
+
+        // Bootstrap モーダルを表示するためのクリックイベント
+        selectMapButton.addEventListener("click", () => {
+            const mapModal = new bootstrap.Modal(document.getElementById("mapModal"));
+            mapModal.show();
+        });
+
+        // モーダル内の地図選択ボタンにイベントを追加
+        document.querySelectorAll('.map-option').forEach(button => {
+            button.addEventListener('click', () => {
+                const mapType = button.getAttribute('data-map-type');
+                const center = map.getCenter();
+                const zoom = map.getZoom();
+                const geolocation = `${center.lat()},${center.lng()},${zoom}`;
+
+                // 選択された地図タイプでリダイレクト
+                location.href = `/polls/${mapType}/${geolocation}/{{ cuisine }}/`;
+            });
+        });
+
+        //////////////////////////////////////////////////////
+        // 料理の種類を選ぶボタンを追加
+        //////////////////////////////////////////////////////
+        const cuisineButton = document.createElement("button");
+        cuisineButton.innerHTML = `<i class="{{ cuisine_icon }}"></i>料理を選択`;
+        cuisineButton.classList.add("btn", "btn-light", "cuisine-button");
+        map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(cuisineButton);
+
+        // モーダルを表示するクリックイベントを設定
+        cuisineButton.addEventListener("click", () => {
+            const cuisineModal = new bootstrap.Modal(document.getElementById("cuisineModal"));
+            cuisineModal.show();
+        });
+
+        // モーダル内の料理選択ボタンにイベントを追加
+        document.querySelectorAll('.cuisine-option').forEach(button => {
+            button.addEventListener('click', () => {
+                const cuisine = button.getAttribute('data-cuisine');
+                const center = map.getCenter();
+                const zoom = map.getZoom();
+                const geolocation = `${center.lat()},${center.lng()},${zoom}`;
+
+                // 選択された料理の種類でリダイレクト
+                location.href = `/polls/{{ path }}/${geolocation}/${cuisine}/`;
+            });
+        });
+
+    }
+
+    initMap();
+</script>
+
+<script>
+    (g => {
+        var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__",
+            m = document, b = window;
+        b = b[c] || (b[c] = {});
+        var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams,
+            u = () => h || (h = new Promise(async (f, n) => {
+                await (a = m.createElement("script"));
+                e.set("libraries", [...r] + "");
+                for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                e.set("callback", c + ".maps." + q);
+                a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+                d[q] = f;
+                a.onerror = () => h = n(Error(p + " could not load."));
+                a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                m.head.append(a)
+            }));
+        d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
+    })({
+        key: "{{ front_maps_api_key }}", v: "beta"
+    });
+</script>
+<!-- Bootstrap JS 読み込み -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+</body>
+</html>
