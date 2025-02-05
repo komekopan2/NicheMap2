@@ -104,6 +104,13 @@ def searches(request):
     }
     return HttpResponse(template.render(context, request))
 
+def searches3(request):
+    template = loader.get_template('polls/searches3.html')
+    context = {
+        'front_maps_api_key': settings.FRONT_MAPS_API_KEY,
+    }
+    return HttpResponse(template.render(context, request))
+
 
 @login_required
 def popular_searches(request, query_geolocation, cuisine):
