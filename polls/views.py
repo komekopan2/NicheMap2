@@ -113,7 +113,13 @@ def searches3(request):
 
 
 @login_required
-def popular_searches(request, query_geolocation, cuisine):
+def popular_searches(request):
+    query_geolocation = request.COOKIES.get('query_geolocation')
+    cuisine = request.COOKIES.get('cuisine')
+
+    # クッキーが取得できない場合の処理
+    if not query_geolocation or not cuisine:
+        return HttpResponseRedirect(reverse("searches"))
     # 文字列をカンマで分割してfloatに変換
     geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1]),
                    'zoom': float(query_geolocation.split(',')[2])}
@@ -143,7 +149,13 @@ def popular_searches(request, query_geolocation, cuisine):
 
 
 @login_required
-def user_rating_count_searches(request, query_geolocation, cuisine):
+def user_rating_count_searches(request):
+    query_geolocation = request.COOKIES.get('query_geolocation')
+    cuisine = request.COOKIES.get('cuisine')
+
+    # クッキーが取得できない場合の処理
+    if not query_geolocation or not cuisine:
+        return HttpResponseRedirect(reverse("searches"))
     # 文字列をカンマで分割してfloatに変換
     geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1]),
                    'zoom': float(query_geolocation.split(',')[2])}
@@ -178,7 +190,13 @@ def user_rating_count_searches(request, query_geolocation, cuisine):
 
 
 @login_required
-def niche_searches(request, query_geolocation, cuisine):
+def niche_searches(request):
+    query_geolocation = request.COOKIES.get('query_geolocation')
+    cuisine = request.COOKIES.get('cuisine')
+
+    # クッキーが取得できない場合の処理
+    if not query_geolocation or not cuisine:
+        return HttpResponseRedirect(reverse("searches3"))
     # 文字列をカンマで分割してfloatに変換
     geolocation = {'lat': float(query_geolocation.split(',')[0]), 'lng': float(query_geolocation.split(',')[1]),
                    'zoom': float(query_geolocation.split(',')[2])}
@@ -208,11 +226,17 @@ def niche_searches(request, query_geolocation, cuisine):
 
 
 @login_required
-def niche_post(request, query_geolocation, cuisine):
+def niche_post(request):
+    query_geolocation = request.COOKIES.get('query_geolocation')
+    cuisine = request.COOKIES.get('cuisine')
+
+    # クッキーが取得できない場合の処理
+    if not query_geolocation or not cuisine:
+        return HttpResponseRedirect(reverse("searches3"))
     if request.method == 'POST':
         form = CandidateRestaurantForm(request.POST, request.FILES)
         if not form.is_valid():
-            return HttpResponseRedirect(reverse("niche_post", args=(query_geolocation, cuisine)))
+            return HttpResponseRedirect(reverse("niche_post"))
         candidate_restaurant = form.save(commit=False)
         lat = float(request.POST['location_lat'])
         lng = float(request.POST['location_lng'])
@@ -222,7 +246,7 @@ def niche_post(request, query_geolocation, cuisine):
 
         # Contributorモデルにユーザー情報があれば何もしない
         if Contributor.objects.filter(user=request.user).exists():
-            return HttpResponseRedirect(reverse("niche_searches", args=(query_geolocation, cuisine)))
+            return HttpResponseRedirect(reverse("niche_searches"))
 
         try:
             google_account = SocialAccount.objects.get(user=request.user, provider='google')
@@ -235,7 +259,7 @@ def niche_post(request, query_geolocation, cuisine):
             contributor = Contributor(user=request.user, picture_url=picture_url)
             contributor.save()
         finally:
-            return HttpResponseRedirect(reverse("niche_searches", args=(query_geolocation, cuisine)))
+            return HttpResponseRedirect(reverse("niche_searches"))
 
     else:
         # 文字列をカンマで分割してfloatに変換
