@@ -96,7 +96,6 @@ def near_by_searches(request):
     return HttpResponse(template.render(context, request))
 
 
-@login_required
 def searches(request):
     template = loader.get_template('polls/searches.html')
     context = {
@@ -112,7 +111,6 @@ def searches3(request):
     return HttpResponse(template.render(context, request))
 
 
-@login_required
 def popular_searches(request):
     query_geolocation = request.COOKIES.get('query_geolocation')
     cuisine = request.COOKIES.get('cuisine')
@@ -148,7 +146,6 @@ def popular_searches(request):
     return HttpResponse(template.render(context, request))
 
 
-@login_required
 def user_rating_count_searches(request):
     query_geolocation = request.COOKIES.get('query_geolocation')
     cuisine = request.COOKIES.get('cuisine')
@@ -189,7 +186,6 @@ def user_rating_count_searches(request):
     return HttpResponse(template.render(context, request))
 
 
-@login_required
 def niche_searches(request):
     query_geolocation = request.COOKIES.get('query_geolocation')
     cuisine = request.COOKIES.get('cuisine')
