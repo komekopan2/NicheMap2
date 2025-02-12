@@ -43,8 +43,8 @@ function initializeMap() {
         // Cookieをセット（有効期限1時間）
         document.cookie = `query_geolocation=${geolocation}; max-age=3600; path=/`;
         document.cookie = `cuisine=${cuisine}; max-age=3600; path=/`;
-        
-        window.location.href = "/polls/popular_searches/";
+
+        window.location.href = "/polls/niche_searches/";
     }, 1000);
 }
 

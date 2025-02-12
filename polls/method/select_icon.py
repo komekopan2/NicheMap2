@@ -25,7 +25,7 @@ def select_cuisine_icon(cuisine):
         "chinese_restaurant": 'fa-solid fa-fire me-3 text-danger',
         "french_restaurant": 'fa-solid fa-wine-glass me-3 text-success',
         "japanese_restaurant": 'fa-solid fa-lemon me-3 text-warning',
-        "italian_restaurant": 'fa-solid fa-pizza-slice me-3 text-danger',
+        "pub": 'fa-solid fa-beer me-3 text-warning',
         "sushi_restaurant": 'fa-solid fa-fish me-3 text-primary',
         "steak_house": 'fa-solid fa-drumstick-bite me-3 text-danger',
         "bakery": 'fa-solid fa-bread-slice me-3 text-warning',

@@ -106,7 +106,10 @@
             const center = map.getCenter();
             const zoom = map.getZoom(); // 現在の縮尺を取得
             let geolocation = center.lat() + "," + center.lng() + "," + zoom;
-            location.href = "/polls/niche_post/" + geolocation + "/{{ cuisine }}/";
+            // Cookieをセット（有効期限1時間）
+            document.cookie = `query_geolocation=${geolocation}; path=/; max-age=3600`;
+            document.cookie = `cuisine={{ cuisine }}; max-age=3600; path=/`;
+            location.href = "/polls/niche_post/";
         });
 
 
@@ -154,7 +157,11 @@
             const center = map.getCenter();
             const zoom = map.getZoom(); // 現在の縮尺を取得
             let geolocation = center.lat() + "," + center.lng() + "," + zoom;
-            location.href = "/polls/{{ path }}/" + geolocation + "/{{ cuisine }}/";
+
+            // Cookieをセット（有効期限1時間）
+            document.cookie = `query_geolocation=${geolocation}; path=/; max-age=3600`;
+            document.cookie = `cuisine={{ cuisine }}; max-age=3600; path=/`;
+            location.href = "/polls/{{ path }}/";
         });
 
         //////////////////////////////////////////////////////
@@ -179,8 +186,10 @@
                 const zoom = map.getZoom();
                 const geolocation = `${center.lat()},${center.lng()},${zoom}`;
 
-                // 選択された地図タイプでリダイレクト
-                location.href = `/polls/${mapType}/${geolocation}/{{ cuisine }}/`;
+                // Cookieをセット（有効期限1時間）
+                document.cookie = `query_geolocation=${geolocation}; path=/; max-age=3600`;
+                document.cookie = `cuisine={{ cuisine }}; max-age=3600; path=/`;
+                location.href = `/polls/${mapType}/`;
             });
         });
 
@@ -206,8 +215,10 @@
                 const zoom = map.getZoom();
                 const geolocation = `${center.lat()},${center.lng()},${zoom}`;
 
-                // 選択された料理の種類でリダイレクト
-                location.href = `/polls/{{ path }}/${geolocation}/${cuisine}/`;
+                // Cookieをセット（有効期限1時間）
+                document.cookie = `query_geolocation=${geolocation}; path=/; max-age=3600`;
+                document.cookie = `cuisine=${cuisine}; max-age=3600; path=/`;
+                location.href = `/polls/{{ path }}/`;
             });
         });
 

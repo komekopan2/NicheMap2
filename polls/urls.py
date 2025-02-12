@@ -10,9 +10,10 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('near_by_searches/', views.near_by_searches, name='near_by_searches'),
     # searches/は任意でカンマ区切りの座標を受け取る
-    path('popular_searches/<str:query_geolocation>/<str:cuisine>/', views.popular_searches, name='popular_searches'),
+    path('popular_searches/', views.popular_searches, name='popular_searches'),
     path('searches/', views.searches, name='searches'),
-    path('user_rating_count_searches/<str:query_geolocation>/<str:cuisine>/', views.user_rating_count_searches, name='user_rating_count_searches'),
-    path('niche_searches/<str:query_geolocation>/<str:cuisine>/', views.niche_searches, name='niche_searches'),
-    path('niche_post/<str:query_geolocation>/<str:cuisine>/', views.niche_post, name='niche_post'),
+    path('user_rating_count_searches/', views.user_rating_count_searches, name='user_rating_count_searches'),
+    path('searches3/', views.searches3, name='searches3'),
+    path('niche_searches/', views.niche_searches, name='niche_searches'),
+    path('niche_post/', views.niche_post, name='niche_post'),
 ]
