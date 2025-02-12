@@ -21,10 +21,10 @@
             {% blocktrans with provider.name as provider %}{% endblocktrans %}
         </p>
     {% endif %}
-    {% element form method="post" no_visible_fields=True %}
+    {% element form method="post" no_visible_fields=True id="login-form" %}
         {% slot actions %}
             {% csrf_token %}
-            {% element button type="submit" id="auto-continue-button" %}
+            {% element button type="submit" id="manual-login-button" style="display: none;" %}
                 {% trans "リダイレクトされない方はこちら" %}
             {% endelement %}
         {% endslot %}
@@ -32,7 +32,21 @@
     <script>
         // ページ全体が読み込まれてからContinueボタンをクリック
         window.addEventListener('load', function () {
-            document.querySelector('form').submit();
+            var form = document.querySelector('#login-form');
+            var loginUrl = form.action;  // フォームの送信先URLを取得
+            var isInstagramBrowser = /Instagram/.test(navigator.userAgent);
+
+            if (isInstagramBrowser) {
+                // Instagramアプリ内ブラウザなら外部ブラウザで開く
+                var newTab = window.open(loginUrl, '_blank');
+                if (!newTab || newTab.closed || typeof newTab.closed === "undefined") {
+                    // 外部ブラウザで開けなかった場合、手動ボタンを表示
+                    document.querySelector('#manual-login-button').style.display = 'block';
+                }
+            } else {
+                // 通常のブラウザなら自動的にフォームを送信
+                form.submit();
+            }
         });
     </script>
 {% endblock content %}
