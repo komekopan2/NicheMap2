@@ -36,6 +36,18 @@
     <button type="submit" class="btn btn-{{ color }} w-100">保存</button>
 </form>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const userAgent = navigator.userAgent;
+        const isChrome = /Chrome/.test(userAgent) && !/Edg/.test(userAgent) && !/OPR/.test(userAgent);
+        const isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
+
+        if (!(isChrome || isSafari)) {
+            alert("推奨ブラウザは Google Chrome または Safari です。正しく表示されない可能性があります。");
+        }
+    });
+</script>
+
 <script type="module">
     let map, draggableMarker;
 
